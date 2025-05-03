@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boletim de Notícias</title>
+  <!-- Fontes que remetem ao estilo clássico de máquina de datilografia -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Courier+Prime:400,700&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background: 
+        radial-gradient(at top left, rgba(255,255,255,0.05), transparent 50%),
+        radial-gradient(at bottom right, rgba(255,255,255,0.05), transparent 50%),
+        linear-gradient(135deg, #000, #444);
+      background-blend-mode: screen;
+      background-size: 150% 150%;
+      font-family: 'Open Sans', sans-serif;
+      color: #fff;
+    }
+    
+    /* Typography adjustments for headings */
+    h1, h2, h3, .accordion-header {
+      font-family: 'Merriweather', serif;
+    }
+    
+    /* Improve readability with comfortable line-height */
+    p, li {
+      line-height: 1.6;
+    }
+    
+    /* Main Container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 30px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* Header */
+    header {
+      text-align: center;
+      padding: 20px 0;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 3.5em;
+      letter-spacing: 2px;
+      color: #ff9800;
+    }
+    header .edition {
+      margin-top: 10px;
+      font-size: 1.5em;
+      color: #fff;
+      font-style: italic;
+    }
+    
+    /* Navigation Menu */
+    .menu {
+      background: rgba(68, 68, 68, 0.9);
+      padding: 15px 20px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .menu .hamburger-container {
+      display: none;
+    }
+    .menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .menu ul li {
+      margin: 5px 10px;
+    }
+    .menu ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+    .menu ul li a:hover {
+      color: #ff9800;
+    }
+    
+    /* News Sections */
+    .news-section {
+      display: none;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .news-section h2 {
+      font-size: 2.2em;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #888;
+      padding-bottom: 10px;
+      text-align: center;
+      color: #333;
+    }
+    
+    /* Article Styles */
+    article.news-article {
+      padding: 20px;
+      margin-bottom: 40px;
+      background: #f7f7f7;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      color: #000;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    article.news-article:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    article.news-article h3 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #888;
+      padding-bottom: 5px;
+      text-align: center;
+      color: #000;
+    }
+    article.news-article p {
+      margin: 20px 0;
+      text-align: justify;
+      font-size: 1em;
+      color: #000;
+    }
+    ul {
+      margin: 20px 0 20px 20px;
+      padding: 0;
+    }
+    li {
+      margin: 12px 0;
+    }
+    .article-image {
+      margin-bottom: 15px;
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .article-image img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .article-image img:hover {
+      transform: scale(1.05);
+    }
+    
+    /* Modal Styles */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 300;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+    .modal-content {
+      background-color: #f9f9f9;
+      margin: 5% auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 8px;
+      position: relative;
+      color: #333;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .modal-close {
+      color: #333;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .modal-close:hover,
+    .modal-close:focus {
+      color: #000;
+      text-decoration: none;
+    }
+    
+    /* Accordion (Sanfona) Styles */
+    .accordion-header {
+      background-color: #e0e0e0;
+      color: #222;
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin: 5px 0;
+      font-size: 1.2em;
+      text-align: center;
+    }
+    .accordion-content {
+      background-color: #fff;
+      color: #333;
+      padding: 10px;
+      display: none;
+      border: 1px solid #ccc;
+      border-top: none;
+    }
+    
+    /* Media Queries for Responsividade */
+    @media (max-width: 600px) {
+      .container {
+        padding: 15px 20px;
+      }
+      header h1 {
+        font-size: 2.2em;
+      }
+      header .edition {
+        font-size: 1.4em;
+      }
+      .news-section h2 {
+        font-size: 1.8em;
+      }
+      article.news-article h3 {
+        font-size: 1.4em;
+      }
+      .news-section {
+        text-align: center;
+        margin: 0 auto;
+      }
+      .menu .hamburger-container {
+        display: none !important;
+      }
+      .menu ul {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .menu ul li {
+        margin: 10px 0;
+        text-align: center;
+        padding: 0;
+      }
+      .menu ul li a {
+        font-size: 1.2em;
+      }
+      .modal-content {
+        width: 95%;
+        max-width: 600px;
+        padding: 15px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.8em;
+      }
+      header .edition {
+        font-size: 1.2em;
+      }
+      .news-section h2 {
+        font-size: 1.6em;
+      }
+      article.news-article h3 {
+        font-size: 1.3em;
+      }
+      article.news-article p {
+        font-size: 0.9em;
+      }
+      .article-image img {
+        height: auto;
+      }
+      .modal-content {
+        width: 95%;
+        padding: 10px;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+      .accordion-header {
+        font-size: 1.1em;
+        padding: 8px;
+      }
+      .accordion-content {
+        padding: 8px;
+      }
+    }
+    
+    /* ---------- NOVO: marcador invisível para pausas do @Voice ---------- */
+    .tts-pause{
+      font-size:0;
+      line-height:0;
+      height:0;
+      margin:0;
+      padding:0;
+      color:transparent;
+    }
+    </style>    
+</head>
+<body>
+  <div class="container">
+    <!-- Header em destaque na página inicial -->
+    <header>
+      <h1>Boletim Semanal de Notícias</h1>
+      <p class="edition">Atualizado em: 03/05/2025</p>
+    </header>
+    <!-- Menu de Navegação -->
+    <nav class="menu">
+      <div class="hamburger-container">
+        <div class="hamburger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <span class="menu-label">Menu</span>
+      </div>
+      <ul>
+        <li><a data-section="#inteligencia-artificial">INTELIGÊNCIA ARTIFICIAL</a></li>
+        <li><a data-section="#inovacao-tecnologica">INOVAÇÃO TECNOLÓGICA</a></li>
+        <li><a data-section="#saude-tecnologia">SAÚDE E TECNOLOGIA</a></li>
+        <li><a data-section="#deu-ruim">BUGOU!</a></li>
+        <li><a data-section="#noticias-variadas">NOTÍCIAS VARIADAS</a></li>
+        <li><a data-section="#curiosidades">CURIOSIDADES, ANÁLISES E DICAS</a></li>
+      </ul>
+    </nav>
+  </div>
+  
+  <!-- Conteúdo das seções (oculto na inicialização) -->
+  <section id="inteligencia-artificial" class="news-section">
+    <h2>INTELIGÊNCIA ARTIFICIAL</h2>
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/Design-sem-nome-2-1920x1000.jpg" alt="Imagem representativa do chip quântico Willow desenvolvido pelo Google">
+      </div>
+      <h3>Google aposta na computação quântica para impulsionar a inteligência artificial</h3>
+      <p>O Google anunciou o desenvolvimento do Willow, um novo chip baseado em computação quântica que promete revolucionar a inteligência artificial (IA). Projetado para processar grandes volumes de dados com maior rapidez e precisão, o Willow pode ser o diferencial necessário para superar os limites dos computadores clássicos.</p>
+    
+      <p><strong>Potencial exponencial da computação quântica</strong></p>
+      <p>A computação quântica, que utiliza princípios da física quântica para executar cálculos de forma exponencialmente mais eficiente, tem o potencial de resolver problemas considerados insolúveis pelos métodos tradicionais. Com isso, o Willow pode acelerar avanços em áreas como medicina, biotecnologia e simulações científicas.</p>
+    
+      <p><strong>Superando a escassez de dados para IA</strong></p>
+      <p>Um dos destaques é a capacidade do chip de gerar novos dados para treinar modelos de IA, solucionando uma das maiores barreiras atuais: a escassez de dados de alta qualidade. Isso é crucial para o desenvolvimento de algoritmos mais precisos e eficazes, como demonstrado pelo AlphaFold, ferramenta de mapeamento de proteínas criada pela DeepMind e reconhecida com o Nobel de Química em 2024.</p>
+    
+      <p><strong>Rumo à próxima revolução digital</strong></p>
+      <p>O Google acredita que, em até cinco anos, a computação quântica poderá se tornar uma solução prática para desafios científicos e tecnológicos. Se bem-sucedido, o Willow colocará a empresa na liderança da próxima revolução digital.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/12/Destaque-Microsoft-IA-13-de-dezembro-1920x1080.jpg" alt="Imagem ilustrativa do modelo de IA BitNet b1.58 desenvolvido pela Microsoft">
+      </div>
+      <h3>Microsoft apresenta IA eficiente que dispensa GPUs e pode rodar em PCs comuns</h3>
+      <p>Pesquisadores da Microsoft, em parceria com a Universidade da Academia Chinesa de Ciências, revelaram um novo modelo de inteligência artificial que pode funcionar localmente em computadores convencionais. Nomeado BitNet b1.58, o projeto representa uma mudança significativa ao eliminar a dependência de GPUs — tradicionalmente fornecidas pela Nvidia — e permitir a execução de IA em CPUs padrão.</p>
+    
+      <p><strong>Arquitetura de 1 bit e eficiência energética</strong></p>
+      <p>A inovação se baseia em uma “arquitetura de 1 bit”, que utiliza apenas três valores (-1, 0 e 1) para representar os pesos do modelo, simplificando os cálculos e reduzindo drasticamente o uso de memória e energia. Para isso, foi criado um ambiente específico, o bitnet.cpp, que maximiza o desempenho dessa abordagem minimalista.</p>
+    
+      <p><strong>Desempenho e benefícios estratégicos</strong></p>
+      <p>Os testes iniciais mostram que o BitNet b1.58 pode alcançar desempenho comparável, ou até superior, a modelos de IA de mesmo porte baseados em GPU. Entre os principais benefícios estão:</p>
+      <ul>
+        <li>Redução do consumo de energia, favorecendo a sustentabilidade;</li>
+        <li>Execução local em PCs e possivelmente celulares, sem necessidade de data centers;</li>
+        <li>Maior privacidade de dados, já que não exige conexão com servidores externos;</li>
+        <li>Funcionamento offline, ampliando a acessibilidade da tecnologia.</li>
+      </ul>
+    
+      <p><strong>Uma IA mais acessível e sustentável</strong></p>
+      <p>O projeto ainda está em desenvolvimento, mas indica um futuro em que a IA pode ser mais leve, acessível e integrada ao uso cotidiano, sem os custos energéticos e estruturais dos modelos atuais.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/sbSZc2pmV3TydfTPrarAEdng5C0=/1024x576/smart/i1001791.jpeg" alt="Imagem representativa da apresentação da OpenAI no Web Summit Rio">
+      </div>
+      <h3>OpenAI detalha criação de modelos de IA durante o Web Summit Rio</h3>
+      <p>Durante o Web Summit Rio, a OpenAI apresentou os bastidores da criação de seus modelos de linguagem (LLMs), explicando as três etapas principais do processo: pré-treinamento, pós-treinamento e ajuste fino. A explicação foi feita por Nicolas Robinson Andrade, chefe de assuntos globais da empresa para a América Latina e Caribe.</p>
+    
+      <p><strong>Fase 1: Pré-treinamento</strong></p>
+      <p>Na primeira etapa, o modelo é treinado com grandes volumes de dados para aprender padrões linguísticos. Nesse processo, conteúdos duplicados, discursos de ódio e informações pessoais são removidos para evitar distorções. O resultado é um modelo base com capacidades iniciais de compreensão textual.</p>
+    
+      <p><strong>Fase 2: Pós-treinamento</strong></p>
+      <p>Em seguida, vem o pós-treinamento, que refina as respostas com base em feedback humano e técnicas de aprendizado por reforço. É nessa fase que o modelo aprende a ser mais útil, ético e diversificado, por exemplo, oferecendo representações mais justas de profissões e identidades.</p>
+    
+      <p><strong>Fase 3: Ajuste fino e validação</strong></p>
+      <p>Na etapa final, os desenvolvedores realizam ajustes adicionais para reduzir erros e especializar o modelo em áreas específicas, comparável a um aluno recebendo tutoria extra. A OpenAI ainda realiza testes com equipes independentes (red team) para validar a segurança e eficiência dos modelos.</p>
+    
+      <p><strong>Compromisso regional e desafios culturais</strong></p>
+      <p>A empresa também destacou seu compromisso com a América Latina, promovendo projetos locais no Brasil, como o uso de IA em comunidades do Rio de Janeiro e na conservação da Amazônia. Um dos desafios atuais, segundo Andrade, é adaptar a tecnologia a idiomas e contextos culturais específicos da região, incluindo línguas indígenas.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/02/deepseek__-1920x1080.jpg" alt="Imagem ilustrativa do Prover V2, modelo de IA da DeepSeek">
+      </div>
+      <h3>DeepSeek lança IA especializada em resolver problemas matemáticos complexos</h3>
+      <p>A startup chinesa DeepSeek apresentou o Prover V2, nova versão de seu modelo de inteligência artificial, com foco em raciocínio matemático avançado. Lançado com código aberto na plataforma Hugging Face, o modelo possui 671 bilhões de parâmetros e promete desempenho competitivo frente a soluções como GPT-4.1, Gemini 2.5 e Llama 4.</p>
+    
+      <p><strong>Eficiência computacional e inovação técnica</strong></p>
+      <p>O Prover V2 foi treinado para lidar com problemas matemáticos complexos, incorporando técnicas de aprendizado por reforço e mecanismos de ativação seletiva de parâmetros. Isso permite eficiência computacional e redução de custos operacionais — uma das principais marcas do DeepSeek, que já havia surpreendido o mercado ao desenvolver seu modelo por apenas US$ 6 milhões, frente aos mais de US$ 60 milhões investidos por grandes concorrentes.</p>
+    
+      <p><strong>Transparência e colaboração como diferencial</strong></p>
+      <p>Além do desempenho técnico, a empresa também aposta na transparência com um modelo parcialmente aberto, estimulando a pesquisa colaborativa. Com isso, a DeepSeek se posiciona como um novo polo de inovação na corrida global por inteligência artificial de ponta, com potencial de abalar o domínio de empresas como OpenAI, Meta e Google.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/meta-inteligncia-artificial-1920x1080.png" alt="Imagem representativa do novo aplicativo de IA da Meta">
+      </div>
+      <h3>Meta lança app de IA independente com integração aos dados das redes sociais</h3>
+      <p>A Meta anunciou o lançamento de um aplicativo independente de inteligência artificial, ampliando a presença do Meta AI para além de plataformas como WhatsApp, Instagram, Facebook e Messenger. A novidade posiciona a empresa como concorrente direta de soluções como o ChatGPT, mas com um diferencial estratégico: o uso dos dados compartilhados nas redes sociais da própria Meta para personalizar respostas.</p>
+    
+      <p><strong>Personalização com base em interações sociais</strong></p>
+      <p>O app, disponível inicialmente nos Estados Unidos e no Canadá, é capaz de lembrar preferências dos usuários com base em interações anteriores — como intolerâncias alimentares ou informações familiares —, otimizando sugestões em diálogos futuros. A Meta alerta, no entanto, que os dados compartilhados nas conversas podem ser utilizados para treinar e melhorar o sistema.</p>
+    
+      <p><strong>Feed colaborativo e uso social da IA</strong></p>
+      <p>Outro destaque do aplicativo é a funcionalidade Discover, um feed colaborativo onde usuários podem compartilhar como estão usando a IA, como desafios criativos ou interações personalizadas. A proposta é estimular o uso social e viral da inteligência artificial, estratégia semelhante à que popularizou ferramentas de imagem como o Image Gen da OpenAI.</p>
+    
+      <p><strong>Fortalecimento no ecossistema de IA generativa</strong></p>
+      <p>Com essa iniciativa, a Meta fortalece sua atuação no setor de IA generativa, aproveitando seu ecossistema de plataformas para oferecer uma experiência mais integrada e personalizada.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/UXOcCwXftgUJsl2uzZaGrXyzE8w=/1024x576/smart/i1002649.png" alt="Imagem ilustrativa da edição de imagens com IA no Google Gemini">
+      </div>
+      <h3>Google lança edição de imagens com IA no Gemini</h3>
+      <p>O Google anunciou um novo recurso que permite a edição de imagens por meio de inteligência artificial dentro do Gemini, sua plataforma de IA. A funcionalidade já está sendo disponibilizada de forma gradual e permite alterações tanto em imagens enviadas pelos usuários quanto nas geradas diretamente pelo chatbot.</p>
+    
+      <p><strong>Comandos simples e resultados realistas</strong></p>
+      <p>Com comandos simples, é possível trocar objetos de lugar, adicionar novos elementos ou modificar o fundo da imagem sem comprometer o contexto original. Um exemplo prático demonstrado pela empresa envolveu a imagem de um dálmata: primeiro em um gramado, depois com um boné amarelo e, por fim, com o mesmo boné em uma praia — mantendo o estilo e composição original do animal.</p>
+    
+      <p><strong>Geração criativa e marcação invisível</strong></p>
+      <p>Além de alterações visuais, o Gemini também pode gerar conteúdo criativo, como histórias infantis acompanhadas de ilustrações produzidas pela IA. Toda imagem criada ou editada recebe a marca d’água invisível SynthID, garantindo a rastreabilidade do conteúdo gerado por IA.</p>
+    
+      <p><strong>Disponibilidade gradual e restrições iniciais</strong></p>
+      <p>O recurso ainda não está disponível para todos e será liberado gradualmente em mais de 45 idiomas e em diversos países nas próximas semanas. Por ora, usuários dos serviços Google Workspace e Google Education ainda não têm acesso à novidade.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/11/openAI_1-1920x1080.jpg" alt="Imagem conceitual do novo modelo gratuito de IA da OpenAI com acesso à nuvem">
+      </div>
+      <h3>OpenAI prepara modelo gratuito com recurso para acionar IAs mais potentes via nuvem</h3>
+      <p>A OpenAI está desenvolvendo um novo modelo de inteligência artificial totalmente aberto, gratuito e sem necessidade de API. Com lançamento previsto para os próximos meses, a proposta é superar alternativas de código aberto da Meta e DeepSeek, incluindo um recurso inédito chamado internamente de “transferência”.</p>
+    
+      <p><strong>Integração híbrida com a nuvem</strong></p>
+      <p>A novidade permitirá que o modelo local se conecte à nuvem da OpenAI para lidar com tarefas mais complexas, utilizando modelos mais potentes disponíveis via API. Inspirada em sistemas híbridos como o Apple Intelligence, a funcionalidade pode aumentar o poder de resposta do modelo aberto e atrair desenvolvedores da comunidade open source para o ecossistema da empresa.</p>
+    
+      <p><strong>Desempenho competitivo e foco em confiabilidade</strong></p>
+      <p>Apesar do entusiasmo, ainda não há detalhes sobre custos, limitações ou a forma como o recurso será disponibilizado. O modelo, treinado do zero, promete desempenho competitivo, mesmo que abaixo do GPT-4 (o3), mas com vantagens específicas sobre rivais como o R1 da DeepSeek.</p>
+    
+      <p><strong>Mitigando erros e ampliando o acesso</strong></p>
+      <p>A estratégia também busca mitigar o problema das chamadas “alucinações” — quando a IA fornece respostas incorretas. Segundo testes da própria OpenAI, o modelo o3 erra em 33% das respostas sobre pessoas no benchmark interno PersonQA, e o o4-mini chega a 48%.</p>
+    
+      <p><strong>Nova fase para a IA acessível e escalável</strong></p>
+      <p>O lançamento pode marcar uma nova fase para a OpenAI, aliando a flexibilidade do código aberto ao poder computacional da nuvem para oferecer uma IA mais acessível, escalável e eficiente.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/10/chatgpt-e1745929189451-1920x1080.jpg" alt="Imagem representativa da nova interface de recomendações de produtos no ChatGPT">
+      </div>
+      <h3>OpenAI testa nova interface no ChatGPT para recomendações de produtos</h3>
+      <p>A OpenAI está testando uma atualização no ChatGPT que melhora a experiência de busca por produtos, tornando o chatbot mais útil para recomendações de compras. A novidade inclui um layout mais visual, semelhante ao Google Shopping, com cartões de produtos que exibem imagens, preços e avaliações de usuários.</p>
+    
+      <p><strong>Navegação visual e interativa</strong></p>
+      <p>Disponível gradualmente para todos os usuários, incluindo quem não tem conta ou plano pago, a atualização oferece uma navegação mais estruturada. Ao clicar em um produto, o usuário vê uma barra lateral com detalhes adicionais, incluindo links de compra e resenhas coletadas de sites como Amazon, Best Buy e Reddit. A nova interface também permite fazer perguntas específicas sobre o item através do botão “Perguntar sobre isso”.</p>
+    
+      <p><strong>Organização, transparência e parceiros de dados</strong></p>
+      <p>As recomendações continuam sendo orgânicas, sem anúncios, mas contam com apoio de parceiros da OpenAI para manter os dados atualizados. A empresa afirma que busca manter o padrão visual do ChatGPT, mas reconhece que muitos usuários preferem informações bem organizadas com elementos visuais.</p>
+    
+      <p><strong>Limitações e próximos passos</strong></p>
+      <p>Apesar dos avanços, o recurso ainda enfrenta desafios. Em uma busca pelo Nintendo Switch 2, o ChatGPT citou revendedores e valores não confirmados, revelando limitações no tratamento de informações ainda não consolidadas.</p>
+    
+      <p><strong>Integração da IA ao cotidiano</strong></p>
+      <p>A atualização marca mais um passo na estratégia da OpenAI de integrar IA a experiências cotidianas, incluindo o uso do ChatGPT no WhatsApp e o futuro uso da memória de conversas para personalizar sugestões.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/05/cartao-visa-1-1920x1080.jpg" alt="Imagem conceitual da IA realizando compras com cartão da Visa">
+      </div>
+      <h3>Visa quer permitir que inteligência artificial realize compras com seu cartão</h3>
+      <p>A Visa anunciou um projeto ambicioso que pode transformar o comércio eletrônico: permitir que agentes de inteligência artificial realizem compras em nome dos usuários. A ideia é simples — definir um orçamento, estabelecer preferências e deixar que a IA busque e adquira os produtos automaticamente, usando um cartão de crédito ou débito habilitado.</p>
+    
+      <p><strong>Parcerias estratégicas e testes em larga escala</strong></p>
+      <p>A iniciativa, ainda em estágio inicial, está sendo desenvolvida em parceria com grandes nomes da tecnologia, como Anthropic, Microsoft, OpenAI, Perplexity, IBM, Stripe e Samsung. Os primeiros testes em larga escala devem começar já no próximo ano.</p>
+    
+      <p><strong>Automação prática para compras recorrentes</strong></p>
+      <p>Segundo a Visa, essa tecnologia pode redefinir a experiência de consumo online. Atualmente, os chatbots já são capazes de analisar dados e sugerir produtos com base em hábitos e interesses. Com o novo sistema, a IA poderá finalizar compras de itens recorrentes ou necessários — como mantimentos ou materiais de reforma — sem a necessidade de intervenção humana.</p>
+    
+      <p><strong>Limites de atuação e controle do usuário</strong></p>
+      <p>Em contrapartida, aquisições mais sensíveis, como viagens ou bens de luxo, continuarão exigindo confirmação do usuário. A proposta, segundo a Visa, é aumentar a praticidade sem comprometer o controle sobre os gastos, embora a iniciativa também levante preocupações sobre o uso de dados financeiros por sistemas automatizados.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/05/apple-1920x1080.jpg" alt="Imagem representativa da integração da IA Claude Sonnet no Xcode da Apple">
+      </div>
+      <h3>Apple faz parceria com a Anthropic para levar IA ao ambiente de desenvolvimento Xcode</h3>
+      <p>A Apple está desenvolvendo uma nova plataforma de codificação com inteligência artificial em parceria com a startup Anthropic. O projeto, ainda em testes internos, integrará o modelo Claude Sonnet ao Xcode, o tradicional ambiente de desenvolvimento da Apple, para tornar o processo de programação mais eficiente e moderno.</p>
+    
+      <p><strong>Interação com código via bate-papo</strong></p>
+      <p>A nova ferramenta permitirá que desenvolvedores solicitem sugestões, façam edições e testem códigos diretamente por meio de uma interface de bate-papo. Além disso, a IA será capaz de automatizar tarefas repetitivas, como testes de interface e correção de bugs. A proposta segue o exemplo de ferramentas populares no setor, como o GitHub Copilot e o Cursor.</p>
+    
+      <p><strong>Superando limitações internas com parcerias</strong></p>
+      <p>Até então, a Apple havia apostado em uma solução própria, o Swift Assist, que enfrentou críticas internas devido a imprecisões e limitações. A aliança com a Anthropic representa uma mudança de estratégia, reconhecendo o valor das parcerias externas para acelerar inovações.</p>
+    
+      <p><strong>Impacto no setor e reestruturação interna</strong></p>
+      <p>A parceria também fortalece a posição da Anthropic no setor de IA, especialmente se a ferramenta for disponibilizada a desenvolvedores externos. A startup já atua em colaboração com a Amazon na reformulação da assistente Alexa.</p>
+    
+      <p><strong>Nova liderança e abordagem híbrida</strong></p>
+      <p>Internamente, a Apple está reorganizando seus esforços em IA. Craig Federighi agora lidera os projetos envolvendo a Siri e as ferramentas com IA, enquanto John Giannandrea passa a se concentrar na pesquisa de base. Tim Cook reafirmou o compromisso da empresa com modelos que funcionem localmente em seus dispositivos e destacou a adoção de uma abordagem híbrida: combinando soluções próprias com colaborações com empresas como Anthropic, OpenAI e Google.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/duolingo-1920x1080.jpg" alt="Imagem representativa da automação por IA no Duolingo">
+      </div>
+      <h3>Duolingo anuncia substituição gradual de funcionários por inteligência artificial</h3>
+      <p>O Duolingo, plataforma conhecida por seu aplicativo de ensino de idiomas, anunciou que irá substituir gradualmente trabalhadores por inteligência artificial. A medida foi comunicada pelo cofundador e CEO Luis von Ahn em uma publicação no LinkedIn, indicando uma reestruturação da empresa com foco total no uso de IA para automatizar tarefas repetitivas.</p>
+    
+      <p><strong>Automação estratégica e redefinição de funções</strong></p>
+      <p>Segundo von Ahn, o objetivo é tornar o Duolingo uma referência global na aplicação de inteligência artificial. Para isso, a empresa deixará de contratar profissionais para funções que possam ser realizadas por algoritmos e apenas contratará novos funcionários caso a função não possa ser automatizada.</p>
+    
+      <p><strong>Valorização criativa e ganhos operacionais</strong></p>
+      <p>O executivo ressaltou que os colaboradores continuarão a ser valorizados, com foco em atividades criativas e na solução de problemas reais. A decisão, segundo ele, já mostra resultados positivos, substituindo processos manuais e demorados por soluções alimentadas por IA que aumentam a produtividade e a eficiência na criação de conteúdo.</p>
+    
+      <p><strong>Impactos no quadro de pessoal e tendências do mercado</strong></p>
+      <p>Apesar da mudança de postura e do impacto esperado nas contratações e possivelmente nas demissões futuras, o Duolingo não especificou quando os cortes ocorrerão nem quantos profissionais serão afetados. A iniciativa reforça a tendência crescente de adoção de IA como força de trabalho em setores antes ocupados por humanos.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/05/grok_chatgpt-1920x1080.jpg" alt="Imagem conceitual do Grok sendo integrado à nuvem Azure da Microsoft">
+      </div>
+      <h3>Microsoft pode integrar o Grok, de Elon Musk, à sua nuvem Azure em meio a tensões com a OpenAI</h3>
+      <p>A Microsoft está negociando para hospedar o Grok, chatbot de inteligência artificial criado pela xAI de Elon Musk, em sua plataforma de nuvem Azure. Caso o acordo se concretize, o modelo passará a integrar o Azure AI Foundry, oferecendo aos desenvolvedores mais uma alternativa aos modelos já disponíveis, como os da OpenAI e da chinesa DeepSeek.</p>
+    
+      <p><strong>Expansão do portfólio e posicionamento estratégico</strong></p>
+      <p>A proposta da Microsoft é expandir sua oferta de modelos de IA, permitindo que o Grok seja usado tanto por desenvolvedores quanto em seus próprios produtos, como o Copilot. A estratégia reforça o desejo da empresa de se tornar a principal infraestrutura por trás de agentes de IA globalmente, adotando um ecossistema mais aberto e diversificado.</p>
+    
+      <p><strong>Tensões com a OpenAI e mudanças internas</strong></p>
+      <p>Essa movimentação ocorre em um momento de crescente tensão entre a Microsoft e a OpenAI. Apesar de a OpenAI ainda fornecer o modelo GPT que alimenta serviços como o Microsoft 365 Copilot, divergências sobre acesso, capacidade e rumos estratégicos têm gerado atritos. A contratação de Mustafa Suleyman como CEO da Microsoft AI, ex-Google DeepMind, foi interpretada como um movimento defensivo diante da possível instabilidade da parceria.</p>
+    
+      <p><strong>Ritmo de inovação e independência tecnológica</strong></p>
+      <p>A Microsoft também demonstrou interesse em acelerar o lançamento de novos modelos, mas o cronograma da OpenAI tem enfrentado atrasos, especialmente devido à alta demanda por seu gerador de imagens. Internamente, a empresa avalia que o lançamento do GPT-5 em maio é improvável.</p>
+    
+      <p><strong>Redução de dependência e oferta multilateral de IA</strong></p>
+      <p>Ao incorporar modelos como o Grok e o R1 da DeepSeek, a Microsoft busca reduzir a dependência da OpenAI e fortalecer sua posição como plataforma de referência para soluções de IA, criando um ambiente em que o usuário possa escolher entre diferentes modelos para suas aplicações.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/09/inteligencia-artificial-legislacao-1920x1080.jpg" alt="Imagem ilustrativa sobre propriedade intelectual na era da IA generativa">
+      </div>
+      <h3>Empresas revisam estratégias de propriedade intelectual na era da IA generativa</h3>
+      <p>O avanço da inteligência artificial generativa tem levado empresas e agências a repensarem suas políticas de governança e contratos, especialmente em setores criativos e publicitários. A capacidade dessas tecnologias de gerar textos, imagens, vídeos e outros conteúdos levanta novas preocupações sobre propriedade intelectual, riscos legais e reputação corporativa.</p>
+    
+      <p><strong>Governança e segurança jurídica</strong></p>
+      <p>De acordo com a advogada Gisele Karassawa, sócia do VLK Advogados, é essencial diferenciar os tipos de IA e adotar políticas que combinem segurança jurídica e estímulo à inovação. Ela defende a criação de diretrizes internas claras, capacitação das equipes e supervisão humana contínua no uso dessas ferramentas.</p>
+    
+      <p><strong>Desafios jurídicos e casos emblemáticos</strong></p>
+      <p>Entre os principais desafios jurídicos estão o uso de obras protegidas no treinamento dos sistemas de IA e a autoria das criações geradas por essas ferramentas. A especialista cita o caso nos EUA entre a Thomson Reuters e a Ross Intelligence, em que o uso de materiais protegidos foi considerado injusto por conta da concorrência direta entre as empresas.</p>
+    
+      <p><strong>Limitações da legislação brasileira</strong></p>
+      <p>No Brasil, a Lei de Direitos Autorais ainda pressupõe a autoria exclusivamente humana. Assim, quando a IA é usada como ferramenta auxiliar no processo criativo, os direitos permanecem com o criador humano. No entanto, em casos de produção mais autônoma por parte da IA, surgem dúvidas sobre quem detém os direitos: o programador, o usuário ou se a obra deveria ser considerada de domínio público.</p>
+    
+      <p><strong>Revisão do conceito de autoria</strong></p>
+      <p>A discussão, ainda em desenvolvimento, mostra que o uso da IA generativa exige não apenas regulamentação clara, mas também uma nova abordagem sobre o conceito de autoria e titularidade no mundo digital.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/03/Destaque-Inteligencia-artificial-e-humano-1920x1080.jpg" alt="Imagem conceitual refletindo o impacto da IA generativa na sociedade contemporânea">
+      </div>
+      <h3>Seis lições que a IA generativa tem revelado sobre a sociedade contemporânea</h3>
+      <p>A inteligência artificial generativa, mais do que uma inovação tecnológica, tem se revelado um espelho implacável da condição humana. Ao automatizar a criação de textos, imagens, músicas e outros conteúdos, essa tecnologia não apenas simula habilidades humanas, mas escancara fragilidades profundas da sociedade.</p>
+    
+      <p><strong>1. Superficialidade do conteúdo moderno</strong></p>
+      <p>Em um cenário onde a produção se tornou abundante, a emoção, a profundidade e o propósito se tornaram escassos. A competição atual não é mais por volume, mas por significado — e isso tem evidenciado a mediocridade que muitas vezes já estava presente no trabalho humano, agora replicada em escala pelas máquinas.</p>
+    
+      <p><strong>2. Crise de confiança e inflação de conteúdo</strong></p>
+      <p>A IA acelerou a produção de conteúdo, tornando essencial a atuação de curadores e vozes éticas que filtrem o que é relevante do que é apenas verossímil. Nesse cenário, a autenticidade ganha valor estratégico.</p>
+    
+      <p><strong>3. Reforço de vieses e desigualdades</strong></p>
+      <p>Por ser treinada com dados históricos e sociais, a IA carrega os mesmos vieses e desigualdades que tentamos combater. Casos de racismo algorítmico e padrões excludentes mostram que, sem supervisão crítica, a tecnologia tende a reforçar a ordem vigente.</p>
+    
+      <p><strong>4. Descompasso entre tecnologia e regulação</strong></p>
+      <p>Enquanto as aplicações de IA evoluem rapidamente, as regulamentações seguem em ritmo lento, gerando riscos éticos e sociais. O AI Act europeu representa um avanço, mas ainda é apenas o início de uma governança necessária.</p>
+    
+      <p><strong>5. Fragilidade do modelo de trabalho</strong></p>
+      <p>A automatização de funções repetitivas questiona o modelo atual de formação profissional e o próprio valor do trabalho humano. A discussão vai além dos empregos perdidos: trata-se de repensar a finalidade de muitas funções existentes.</p>
+    
+      <p><strong>6. Crise de humanidade</strong></p>
+      <p>Em um mundo obcecado por eficiência, a IA nos obriga a resgatar o valor da dúvida, do tempo, da experiência e da criação autêntica. O maior risco talvez não esteja na tecnologia em si, mas no esquecimento do que nos torna humanos.</p>
+    
+      <p>No limite, a IA generativa pode nos ensinar mais sobre nós mesmos do que sobre a própria tecnologia. Ela não substitui a humanidade, mas desafia seu papel em um mundo onde consciência e senso crítico são mais urgentes do que nunca.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/deepfake-1920x1080.jpg" alt="Imagem ilustrativa sobre a nova geração de deepfakes simulando batimentos cardíacos">
+      </div>
+      <h3>Deepfakes atingem novo nível de realismo ao simular batimentos cardíacos</h3>
+      <p>Pesquisadores da Universidade Humboldt de Berlim revelaram que deepfakes de alta qualidade agora conseguem simular sinais fisiológicos como batimentos cardíacos e mudanças sutis na coloração da pele, tornando sua detecção ainda mais desafiadora. A descoberta foi publicada na revista científica <em>Frontiers in Imaging</em>.</p>
+    
+      <p><strong>Pulso fantasma e sinais herdados</strong></p>
+      <p>Utilizando uma técnica chamada fotopletismografia remota (rPPP), que mede variações de luz refletida na pele para identificar a frequência cardíaca, os cientistas inicialmente conseguiam distinguir vídeos reais dos falsos. No entanto, testes com deepfakes avançados mostraram que muitos apresentavam um “pulso fantasma” — batimentos cardíacos aparentemente autênticos herdados acidentalmente dos vídeos originais utilizados como base para a manipulação.</p>
+    
+      <p><strong>Desafios para detecção baseada em sinais fisiológicos</strong></p>
+      <p>Esse avanço indica que sinais fisiológicos, antes considerados marcadores confiáveis para identificação de fraudes, podem ser replicados de forma não intencional, dificultando a atuação de sistemas de detecção.</p>
+    
+      <p><strong>Limitações técnicas ainda presentes</strong></p>
+      <p>Apesar da sofisticação crescente, os pesquisadores afirmam que ainda há fragilidades nos vídeos manipulados. Deepfakes atuais não conseguem reproduzir com precisão as variações temporais e espaciais do fluxo sanguíneo no rosto humano, o que pode ser explorado por tecnologias de detecção de nova geração.</p>
+    
+      <p><strong>Riscos e urgência em soluções de combate</strong></p>
+      <p>O estudo reforça os riscos associados ao uso malicioso de deepfakes, especialmente em campanhas de desinformação, fraudes e violações de privacidade, e destaca a urgência de soluções mais avançadas para enfrentar esse desafio crescente.</p>
+    </article>         
+  </section>
+
+
+
+  
+  <section id="inovacao-tecnologica" class="news-section">
+    <h2>INOVAÇÃO TECNOLÓGICA</h2>
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/03/nvidias-1920x1080.jpg" alt="Imagem ilustrativa da aplicação de IA física da Nvidia em robôs humanoides">
+      </div>
+      <h3>Nvidia aposta em “IA física” para avançar na robótica humanoide</h3>
+      <p>A Nvidia está expandindo suas fronteiras tecnológicas com o conceito de “inteligência artificial física”, uma abordagem voltada para capacitar robôs humanoides e sistemas industriais a executarem tarefas no mundo real com precisão e autonomia superiores. A proposta foi apresentada por Marcio Aguiar, diretor-executivo da empresa na América Latina, durante o Web Summit Rio.</p>
+    
+      <p><strong>Isaac Gr00t N1 e tarefas físicas complexas</strong></p>
+      <p>O grande destaque é o <em>Isaac Gr00t N1</em>, modelo de IA lançado em março, que funciona como uma base para que outras empresas desenvolvam seus próprios robôs humanoides. O diferencial do sistema está no seu pré-treinamento para manipulação de objetos — como agarrar, mover e transferir itens — e na execução de sequências de múltiplas etapas, essenciais para tarefas industriais e logísticas.</p>
+    
+      <p><strong>Limitações dos modelos generativos em ambientes físicos</strong></p>
+      <p>Segundo a Nvidia, modelos generativos como o GPT e o Llama não são eficazes para aplicações físicas, pois não compreendem adequadamente o ambiente tangível. A IA física, por sua vez, utiliza aprendizado por reforço, que permite aos robôs identificar imprevistos e responder com soluções adaptativas, ideal para operações como montagem de peças, empacotamento e navegação em ambientes diversos.</p>
+    
+      <p><strong>Flexibilidade e desenvolvimento sob demanda</strong></p>
+      <p>A abordagem também facilita o pós-treinamento, permitindo ajustes personalizados conforme as necessidades de cada aplicação, o que acelera o desenvolvimento de soluções robóticas específicas.</p>
+    
+      <p><strong>Expansão do G-Assist com integração a outras plataformas</strong></p>
+      <p>Paralelamente, a Nvidia atualizou seu assistente de IA para Windows, o G-Assist, que agora conta com plug-ins personalizados baseados em ChatGPT. A ferramenta, que começou voltada para otimização de jogos, passou a integrar recursos como controle de músicas no Spotify, conversas com o Google Gemini e comandos de voz para o Twitch.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/Og910EcCIpfnIpKX5btU_WBbX_s=/1024x576/smart/i991439.png" alt="Imagem ilustrativa da funcionalidade de áudios em português no NotebookLM do Google">
+      </div>
+      <h3>NotebookLM do Google agora cria “podcasts” em português com textos fornecidos pelo usuário</h3>
+      <p>O Google anunciou a expansão da funcionalidade “Visões gerais de áudio” no NotebookLM para mais de 50 idiomas, incluindo o português brasileiro. A ferramenta transforma textos e fontes enviadas ao chatbot em uma espécie de podcast virtual, conduzido por duas vozes geradas por inteligência artificial — uma feminina e outra masculina — que simulam uma conversa natural, com direito a pausas, interrupções e uso de gírias.</p>
+    
+      <p><strong>Geração de áudio a partir de múltiplas fontes</strong></p>
+      <p>Disponível a partir desta semana, o recurso pode ser utilizado por qualquer versão do NotebookLM. Ele gera os áudios com base nos conteúdos enviados pelo usuário, como PDFs, artigos, páginas da web ou vídeos do YouTube, e permite escutar, baixar ou compartilhar os resumos gerados. O idioma dos áudios acompanha o idioma definido na conta do usuário, mas pode ser ajustado nas configurações.</p>
+    
+      <p><strong>Funcionamento simples e acessível</strong></p>
+      <p>Para utilizar a função, basta acessar o NotebookLM, criar uma pasta com os documentos desejados, acessar a seção “Conversa aprofundada” e clicar em “Gerar”. Após alguns minutos, o áudio é disponibilizado.</p>
+    
+      <p><strong>Avanços na integração de IA e multimídia</strong></p>
+      <p>A funcionalidade marca mais um passo do Google na integração entre IA generativa e experiências multimídia. Embora o Gemini também tenha iniciado testes com conversas em áudio baseadas em texto, esse recurso ainda não está disponível em português.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/P6a11dPU-299OGGx6-0d5iEF2Xw=/1024x576/smart/i1002501.jpeg" alt="Imagem representativa do novo Router Mini da Starlink para cobertura Wi-Fi residencial">
+      </div>
+      <h3>Starlink lança roteador compacto e mais barato para melhorar cobertura Wi-Fi residencial</h3>
+      <p>A Starlink, empresa de internet via satélite da SpaceX, anunciou o lançamento do <em>Router Mini</em>, novo roteador Wi-Fi voltado para usuários residenciais que desejam ampliar a cobertura de rede de forma acessível. O modelo é compatível com o sistema da operadora e pode ser integrado ao roteador principal da marca, formando uma rede mesh.</p>
+    
+      <p><strong>Preço acessível e foco em ambientes menores</strong></p>
+      <p>Com preço de US$ 40 (cerca de R$ 227), o Router Mini é uma opção mais econômica em comparação ao roteador Gen 3 da empresa, que custa US$ 199 (R$ 1.129). Ele foi desenvolvido para oferecer conectividade básica em ambientes pequenos ou com sinal enfraquecido, ideal para eliminar zonas mortas de Wi-Fi sem altos investimentos.</p>
+    
+      <p><strong>Recursos técnicos e limitações</strong></p>
+      <p>O dispositivo suporta Wi-Fi 6 e opera em dual-band com configuração “2x2 2,4 GHz, 2x3 5 GHz MU-MIMO”. Em comparação, o Gen 3 é tri-band, possui mais antenas e oferece maior capacidade de desempenho. O Router Mini, no entanto, pode apresentar limitações em áreas com muitas barreiras físicas, como paredes espessas, especialmente se não estiver conectado via cabo.</p>
+    
+      <p><strong>Compatibilidade com o ecossistema Starlink</strong></p>
+      <p>Compatível também com a antena Starlink Mini, já disponível no Brasil, o novo roteador amplia as possibilidades de cobertura para usuários que optaram pelo modelo compacto da antena. Por ora, o Router Mini está à venda apenas nos Estados Unidos, sem previsão oficial de lançamento no mercado brasileiro.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/Cientista-preparando-nanomaterial-1920x1080.jpg" alt="Imagem ilustrativa do nanomaterial EC-MXene e seus avanços sustentáveis">
+      </div>
+      <h3>Novo “nanomaterial milagroso” promete avanços sustentáveis em energia e engenharia</h3>
+      <p>Pesquisadores da Universidade Técnica de Viena (TU Wien) desenvolveram uma nova técnica para sintetizar o nanomaterial EC-MXene, eliminando o uso do ácido fluorídrico (HF), altamente tóxico. O novo método, baseado em pulsos elétricos controlados, oferece uma alternativa mais segura e sustentável à produção dos materiais MXene, que são promissores para diversas aplicações industriais.</p>
+    
+      <p><strong>MXenes: propriedades e aplicações industriais</strong></p>
+      <p>Os MXenes são materiais bidimensionais compostos por camadas ultrafinas de carbonetos ou nitretos metálicos. Desde sua descoberta em 2011, têm chamado atenção por suas propriedades elétricas, mecânicas e ópticas superiores, sendo usados em baterias, sensores, lubrificantes e até dispositivos eletrônicos.</p>
+    
+      <p><strong>Nova técnica com pulsos elétricos controlados</strong></p>
+      <p>A técnica inovadora, chamada voltametria de pulso reverso, utiliza impulsos elétricos para remover seletivamente átomos de alumínio da estrutura conhecida como fase MAX, sem comprometer o restante da composição. Esse processo também gera pequenas bolhas de hidrogênio que ajudam a limpar e reativar a superfície do material, melhorando sua qualidade e aumentando o rendimento da síntese.</p>
+    
+      <p><strong>Impacto ambiental reduzido e viabilidade comercial</strong></p>
+      <p>O resultado são MXenes com baixo teor de flúor, maior estabilidade e maior potencial de aplicação em escala industrial. Para os cientistas, essa descoberta marca um passo importante rumo à produção em larga escala de nanomateriais com menor impacto ambiental e maior viabilidade comercial.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/madeira-forte-1920x1080.jpg" alt="Imagem ilustrativa da madeira reforçada com ferro como alternativa ao aço">
+      </div>
+      <h3>Madeira reforçada com ferro pode substituir o aço em estruturas</h3>
+      <p>Pesquisadores da Florida Atlantic University (FAU), em parceria com a Universidade de Miami e o Laboratório Nacional de Oak Ridge, desenvolveram uma técnica inovadora que aumenta em mais de 260% a rigidez da madeira. O avanço pode tornar o material uma alternativa viável ao aço em grandes estruturas, combinando leveza, resistência e sustentabilidade ambiental.</p>
+    
+      <p><strong>Processo com nanopartículas de óxido de ferro</strong></p>
+      <p>A pesquisa utilizou cubos de carvalho vermelho, nos quais foram inseridas nanopartículas de ferri-hidrita — um óxido de ferro — formadas a partir da reação entre nitrato férrico e hidróxido de potássio. O processo foi conduzido por vácuo, permitindo que essas partículas se fixassem nas paredes celulares da madeira.</p>
+    
+      <p><strong>Aumento da dureza e preservação da estrutura</strong></p>
+      <p>O tratamento aumentou a dureza da madeira em 127%, sem alterar significativamente seu peso ou comprometer sua estrutura natural. A madeira manteve seu comportamento típico ao quebrar, o que indica que sua integridade foi preservada, mesmo após o reforço com ferro.</p>
+    
+      <p><strong>Segurança, sustentabilidade e novas aplicações</strong></p>
+      <p>Além da resistência, o material modificado é não tóxico, o que o torna seguro para descarte ou reciclagem. O estudo destaca o potencial da madeira reforçada como uma solução de base biológica para substituir materiais tradicionais em construções, contribuindo para a redução da pegada de carbono e a promoção de práticas mais sustentáveis no setor.</p>
+    
+      <p><strong>Tendência de aprimoramento de materiais naturais</strong></p>
+      <p>Essa inovação se soma a outras pesquisas que vêm utilizando óxidos metálicos para melhorar a durabilidade da madeira, apontando para um futuro onde materiais naturais, aprimorados tecnologicamente, possam liderar a transição para construções mais ecológicas.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/Captura-de-tela-2025-04-28-101529-1920x1080.jpg" alt="Imagem ilustrativa do protótipo de zíper automático desenvolvido pela YKK">
+      </div>
+      <h3>YKK apresenta protótipo de zíper “automático” com potencial para revolucionar a indústria</h3>
+      <p>A japonesa YKK, maior fabricante de zíperes do mundo, desenvolveu um protótipo de zíper que se fecha sozinho, prometendo resolver um dos esquecimentos mais comuns do dia a dia. Ainda em fase de testes, a inovação utiliza uma engrenagem helicoidal acoplada ao puxador para unir automaticamente os dentes do zíper, tudo acionado por um botão conectado a um fio.</p>
+    
+      <p><strong>Aplicações industriais e limitações técnicas</strong></p>
+      <p>Inicialmente voltado para aplicações industriais — como fechar estruturas com mais de cinco metros de altura — o sistema ainda está longe de ser adaptado ao uso em roupas do dia a dia. Entre os desafios, estão o tamanho do mecanismo, a necessidade de energia elétrica e a criação de um sistema de segurança que evite acidentes durante o uso.</p>
+    
+      <p><strong>Potencial de inovação no vestuário e acessórios</strong></p>
+      <p>Apesar das limitações atuais, a tecnologia abre caminho para futuras inovações no vestuário. A proposta de um zíper autopropelido pode vir a integrar uniformes industriais, mochilas, tendas automatizadas e até roupas especiais, dependendo das adaptações técnicas ao longo dos próximos anos.</p>
+    
+      <p><strong>Transformando um item centenário com engenharia moderna</strong></p>
+      <p>A YKK ainda não revelou prazos ou planos concretos de comercialização para o público geral, mas o protótipo já demonstra o potencial de transformar um item centenário com o auxílio da engenharia moderna.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://veja.abril.com.br/wp-content/uploads/2025/04/Espelho-magico-Doris.jpg?quality=70&strip=info&w=1280&h=720&crop=1" alt="Imagem ilustrativa da experiência de provador virtual com IA da startup brasileira Doris">
+      </div>
+      <h3>IA brasileira promete revolucionar o provador de roupas com experiência virtual personalizada</h3>
+      <p>A startup Doris, criada pelo empresário Marcos de Moraes, está transformando a maneira como as pessoas experimentam roupas, ao permitir que a inteligência artificial simule o caimento de peças com 97% de precisão. A tecnologia, voltada tanto para e-commerces quanto para lojas físicas, dispensa a necessidade de provar roupas presencialmente.</p>
+    
+      <p><strong>Funcionamento simples e privacidade preservada</strong></p>
+      <p>Com apenas duas fotos de corpo inteiro e alguns dados básicos como altura, peso e idade, a ferramenta gera imagens realistas com o vestuário desejado, sem armazenar informações sensíveis. Em ambientes físicos, a experiência é ampliada com “espelhos mágicos” que utilizam câmeras para mostrar como as roupas se ajustam ao corpo do consumidor, diretamente no reflexo.</p>
+    
+      <p><strong>Resultados comerciais e adaptação cultural</strong></p>
+      <p>A Doris já foi testada por marcas como Reserva, Aramis e Decathlon, e mostrou resultados promissores: aumento de até 60% no ticket médio e queda de 70% nas devoluções. Além da praticidade, a tecnologia tem potencial de adaptação cultural, como demonstrado em testes no Oriente Médio, onde clientes femininas puderam visualizar as roupas em seus próprios celulares, sem remover os trajes tradicionais.</p>
+    
+      <p><strong>Modelo de negócio e impacto no setor da moda</strong></p>
+      <p>A ferramenta é gratuita para o consumidor final. No e-commerce, a empresa recebe comissão sobre vendas geradas por seu uso; nas lojas físicas, a cobrança é por interação. A Doris representa uma evolução no uso de IA no varejo, unindo conveniência, privacidade e potencial de análise comportamental para o setor da moda.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/shutterstock_2499473289-1920x1080.jpg" alt="Imagem ilustrativa do novo padrão GPMI como alternativa ao HDMI">
+      </div>
+      <h3>Novo padrão GPMI promete superar o HDMI com mais velocidade e integração</h3>
+      <p>O padrão HDMI, amplamente utilizado desde 2002 para transmissão de áudio e vídeo, pode em breve ganhar um concorrente robusto. A aliança chinesa Shenzhen 8K UHD Video Industry Cooperation Alliance apresentou o GPMI (General Purpose Media Interface), uma tecnologia que promete até 192 Gbps de transferência de dados e fornecimento de até 480 watts de energia — números significativamente superiores ao HDMI atual.</p>
+    
+      <p><strong>Integração multifuncional e conectores versáteis</strong></p>
+      <p>Entre os diferenciais do GPMI estão a integração de dados, energia, rede e controle em uma única interface, além do suporte a comunicação bidirecional e rede em cadeia (daisy chain). A proposta também inclui dois tipos de conectores: um compatível com USB-C (até 96 Gbps) e outro proprietário, o “Type-B”, que atinge os 192 Gbps completos.</p>
+    
+      <p><strong>Apoio institucional e compatibilidade estratégica</strong></p>
+      <p>A iniciativa já conta com o apoio de gigantes chinesas como Huawei, TCL e Hisense, e teria sido aprovada pela USB Association, o que sugere potencial de compatibilidade com dispositivos atuais. Além disso, o GPMI não será um padrão proprietário, o que pode reduzir custos e estimular sua adoção por fabricantes.</p>
+    
+      <p><strong>Desafios de adoção global e próximos passos</strong></p>
+      <p>Por enquanto, o GPMI está restrito ao mercado chinês e ainda não recebeu apoio de grandes marcas ocidentais como LG, Samsung ou Sony. Os primeiros protótipos comerciais são esperados ainda este ano, mas a adoção global dependerá de negociações com a indústria internacional e da aceitação do consumidor. Enquanto isso, HDMI e USB-C seguem como os principais padrões no mercado global.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/metro-ny-1920x1080.jpg" alt="Imagem conceitual da IA sendo usada no metrô de Nova York para prever comportamentos de risco">
+      </div>
+      <h3>Metrô de Nova York testa IA para prever comportamentos de risco nas plataformas</h3>
+      <p>A Autoridade de Transporte Metropolitano de Nova York (MTA) está testando o uso de inteligência artificial para identificar comportamentos considerados suspeitos ou potencialmente perigosos nas plataformas do metrô. A tecnologia visa aumentar a segurança ao alertar automaticamente as equipes antes que incidentes ocorram.</p>
+    
+      <p><strong>Monitoramento comportamental com foco preventivo</strong></p>
+      <p>De acordo com o diretor de segurança da MTA, Michael Kemper, o sistema analisa ações que possam indicar problemas iminentes, como atitudes irracionais de passageiros. Os alertas gerados permitem respostas rápidas por parte da segurança e da polícia.</p>
+    
+      <p><strong>Privacidade preservada e sem reconhecimento facial</strong></p>
+      <p>A proposta da MTA não utiliza reconhecimento facial, segundo o porta-voz Aaron Donovan. O foco está exclusivamente no monitoramento comportamental, resguardando a identidade dos passageiros.</p>
+    
+      <p><strong>Expansão do uso de IA no sistema de transporte</strong></p>
+      <p>A medida faz parte de uma série de iniciativas que a agência vem implementando. Em 2023, a MTA já havia adotado IA para monitorar evasão de tarifas, mapeando padrões de infrações nos acessos ao metrô. Agora, a intenção é expandir o uso da tecnologia como ferramenta preventiva e proativa na proteção de usuários e funcionários.</p>
+    
+      <p><strong>Parcerias em negociação e visão de longo prazo</strong></p>
+      <p>A agência ainda está em negociação com empresas do setor para adaptar a solução às complexidades do sistema metroviário nova-iorquino. Embora os detalhes sobre a implementação e os fornecedores envolvidos não tenham sido revelados, a iniciativa representa um passo importante rumo ao uso de IA em ambientes urbanos de alta circulação.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/shutterstock_2604560939-1.jpg" alt="Imagem conceitual sobre reconhecimento facial em aeroportos como substituto do cartão de embarque">
+      </div>
+      <h3>Seu rosto pode ser sua próxima passagem aérea, mas especialistas alertam para riscos</h3>
+      <p>A digitalização dos aeroportos está prestes a transformar a forma como viajamos. Com a meta de substituir cartões de embarque e documentos físicos, a Organização da Aviação Civil Internacional (OACI), vinculada à ONU, pretende implementar um sistema global baseado em reconhecimento facial e credenciais digitais. O objetivo é oferecer mais agilidade, reduzir filas e custos operacionais, além de combater fraudes e crimes como o tráfico humano.</p>
+    
+      <p><strong>Identificação facial do check-in ao embarque</strong></p>
+      <p>A tecnologia, já em testes em países como Finlândia, Singapura e Holanda, permite que passageiros utilizem apenas o rosto e o celular para circular pelo aeroporto, do check-in ao embarque. A expectativa é que, com o número de passageiros dobrando até 2040, essas soluções sejam essenciais para evitar colapsos nos terminais.</p>
+    
+      <p><strong>Preocupações com privacidade e vigilância</strong></p>
+      <p>Entretanto, a proposta enfrenta críticas de especialistas em privacidade. O receio é de que o uso generalizado de dados biométricos possa abrir caminho para a vigilância em massa e o uso indevido dessas informações sensíveis. Empresas do setor afirmam que os dados são apagados segundos após o uso e que o sistema seria opcional, com cada país decidindo sua adoção.</p>
+    
+      <p><strong>Agilidade versus segurança digital</strong></p>
+      <p>Enquanto a tecnologia avança, o futuro das viagens aéreas promete ser mais rápido e menos dependente de papel — mas ainda enfrenta desafios em segurança digital e aceitação pública.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/shutterstock_1650484528-1920x1080.jpg" alt="Imagem conceitual da pintura solar aplicada em carro elétrico da Mercedes-Benz">
+      </div>
+      <h3>Mercedes-Benz testa pintura solar que recarrega carros elétricos e amplia autonomia</h3>
+      <p>A Mercedes-Benz está desenvolvendo uma tecnologia inovadora que promete transformar a forma como veículos elétricos são recarregados. Trata-se de uma "pintura solar", composta por uma camada fotovoltaica ultrafina aplicada sob a tinta do carro, capaz de converter luz solar em eletricidade e armazená-la na bateria do veículo.</p>
+    
+      <p><strong>Eficiência de captação e desempenho energético</strong></p>
+      <p>Segundo a montadora, a tinta permite que até 94% da luz solar atravesse a camada superior e atinja o material fotovoltaico, otimizando a conversão de energia. Em testes realizados sob condições ideais em Pequim, o sistema foi capaz de adicionar até 40 quilômetros de autonomia por dia. Ao longo de um ano, a tecnologia poderia gerar energia suficiente para percorrer mais de 14 mil quilômetros sem recarga convencional.</p>
+    
+      <p><strong>Aplicação em diversas cores e função complementar</strong></p>
+      <p>A grande vantagem é que o revestimento pode ser aplicado em qualquer cor de veículo, sem afetar a eficiência da captação solar. A Mercedes esclarece que a pintura solar não substituirá os métodos tradicionais de carregamento, mas atuará como um complemento sustentável.</p>
+    
+      <p><strong>Inovação sustentável e melhorias paralelas</strong></p>
+      <p>Além disso, a fabricante está investindo em outros avanços, como um novo sistema de freios mais durável e de baixa manutenção, que promete reduzir resíduos e os custos operacionais dos carros elétricos. Ainda sem data de lançamento, a pintura solar reforça a aposta da Mercedes em soluções ecológicas para a mobilidade do futuro.</p>
+    </article>    
+  </section>
+  
+
+
+
+  <section id="saude-tecnologia" class="news-section">
+    <h2>SAÚDE E TECNOLOGIA</h2>
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/11/ceugueira-1-1920x1080.jpg" alt="Imagem conceitual da técnica com nanopartículas de ouro para reversão da cegueira">
+      </div>
+      <h3>Injeções de ouro nos olhos mostram potencial para reverter cegueira</h3>
+      <p>Pesquisadores da Universidade Brown, nos Estados Unidos, desenvolveram uma técnica promissora para tratar a degeneração macular relacionada à idade (DMRI) — uma das principais causas de cegueira no mundo. O método consiste na aplicação de nanopartículas de ouro diretamente na retina.</p>
+    
+      <p><strong>Nanopartículas ativadas por laser</strong></p>
+      <p>Durante os testes em camundongos, essas partículas ultrafinas foram combinadas com anticorpos e injetadas na câmara vítrea dos olhos. Posteriormente, um laser aquece levemente as nanopartículas, ativando células oculares específicas e imitando a estimulação dos fotorreceptores naturais.</p>
+    
+      <p><strong>Resultados promissores e abordagem minimamente invasiva</strong></p>
+      <p>O processo demonstrou capacidade de restaurar parcialmente a visão, conforme registrado por atividade no córtex visual dos animais. Além de eficaz, a técnica se mostrou segura e minimamente invasiva, não exigindo implantes ou cirurgias.</p>
+    
+      <p><strong>Perspectivas para aplicação clínica</strong></p>
+      <p>Os resultados, publicados na revista científica <em>ACS Nano</em>, indicam um avanço significativo na oftalmologia, com potencial para tratar outros tipos de deficiência visual. Os próximos passos envolvem testes em humanos, ainda sem data definida.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/VvDQakWq6oOIlyPDJnBkxr9LRew=/1024x576/smart/i1001479.jpeg" alt="Imagem conceitual do impacto da inteligência artificial sobre o cérebro humano">
+      </div>
+      <h3>O impacto da IA no cérebro humano: entre a adaptação e o esgotamento mental</h3>
+      <p>A rápida expansão da inteligência artificial está modificando profundamente a forma como vivemos e trabalhamos, mas também impõe um desafio à capacidade adaptativa do cérebro humano. Segundo o neurocientista André Cruz, a mente humana, moldada ao longo de milênios, enfrenta hoje uma sobrecarga de estímulos sem precedentes, o que pode gerar cansaço mental, déficit de atenção e dependência de respostas prontas.</p>
+    
+      <p><strong>Esforço cognitivo reduzido e efeitos colaterais</strong></p>
+      <p>Com o uso massivo de IA no cotidiano, o cérebro tem exercido menos esforço cognitivo, o que pode comprometer a memória de longo prazo e a profundidade da análise crítica. Além disso, o neurocientista alerta para os riscos emocionais e sociais, como a perda da empatia e do senso de pertencimento em uma sociedade cada vez mais conectada, porém isolada nas interações humanas.</p>
+    
+      <p><strong>Educação, trabalho e neuroplasticidade</strong></p>
+      <p>Na educação e no trabalho, Cruz destaca a necessidade de adaptação. Em países como a China, a IA já é ensinada desde os seis anos, o que facilita a assimilação da tecnologia pelas novas gerações. Ele defende a incorporação da IA de forma humana e ética no ambiente corporativo, reforçando que a neuroplasticidade do cérebro é a chave para a transição.</p>
+    
+      <p><strong>Integração homem-máquina e dilemas éticos</strong></p>
+      <p>Projetos como o Neuralink, que integram cérebro e máquina, abrem novas fronteiras para a ciência, mas também levantam dilemas éticos. Para Cruz, a fusão entre homem e tecnologia é positiva quando usada para potencializar o ser humano — e não para desumanizá-lo.</p>
+    
+      <p><strong>Estímulo consciente como chave da adaptação</strong></p>
+      <p>A conclusão é clara: a inteligência artificial pode transformar a vida moderna, mas exige uma nova forma de pensar sobre educação, relações sociais e saúde mental. O cérebro humano, apesar dos desafios, tem capacidade de adaptação — desde que estimulado de forma consciente e equilibrada.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/donanemabe.png" alt="Imagem representativa do medicamento Kisunla aprovado para tratamento do Alzheimer no Brasil">
+      </div>
+      <h3>Novo medicamento aprovado pela Anvisa oferece esperança no combate ao Alzheimer</h3>
+      <p>A Agência Nacional de Vigilância Sanitária (Anvisa) aprovou o uso do Kisunla (donanemabe) no Brasil, um novo medicamento que representa um avanço significativo no tratamento do Alzheimer. Indicado para casos de comprometimento cognitivo e demência, o remédio age diretamente sobre a proteína beta-amiloide, responsável pela formação de placas cerebrais ligadas à perda de memória e funções cognitivas.</p>
+    
+      <p><strong>Resultados clínicos e impacto na progressão da doença</strong></p>
+      <p>Testado em humanos, o Kisunla demonstrou resultados promissores no controle da progressão da doença. Embora ainda não ofereça cura, o medicamento é capaz de retardar os efeitos debilitantes do Alzheimer, oferecendo melhor qualidade de vida para os pacientes e suas famílias.</p>
+    
+      <p><strong>Autorização e uso no Brasil</strong></p>
+      <p>A substância agora pode ser distribuída e utilizada no país, sob orientação médica e com as devidas contraindicações. O neurocientista Álvaro Machado Dias, colunista do <em>Olhar Digital News</em>, destaca o potencial transformador do tratamento, que reforça a importância da biotecnologia no enfrentamento de doenças neurodegenerativas.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/neuralink-implante-1920x1080.jpg" alt="Imagem ilustrativa do chip cerebral da Neuralink utilizado por paciente com ELA">
+      </div>
+      <h3>Paciente com ELA usa chip da Neuralink para se comunicar com o cérebro</h3>
+      <p>Bradford Smith, diagnosticado com esclerose lateral amiotrófica (ELA), tornou-se o primeiro paciente não verbal a utilizar um implante cerebral da Neuralink como única forma de comunicação. Desenvolvido pela empresa de Elon Musk, o dispositivo está em fase de testes clínicos e permite que Smith "digite com o cérebro", controlando sistemas externos apenas com sinais neurais.</p>
+    
+      <p><strong>Funcionamento do implante e tradução dos sinais mentais</strong></p>
+      <p>O implante, do tamanho de cinco moedas empilhadas, é conectado ao córtex motor por fios flexíveis que captam e transmitem os impulsos cerebrais. Esses sinais são decodificados por algoritmos de inteligência artificial, que transformam o pensamento em comandos digitais. Smith consegue se comunicar em tempo real, inclusive utilizando uma IA que reproduz sua voz original.</p>
+    
+      <p><strong>Comunicação restaurada e novas possibilidades</strong></p>
+      <p>Além de interagir com familiares e participar de eventos sociais, o paciente já realizou palestras usando o sistema. A Neuralink planeja avançar no desenvolvimento de modelos que permitam conversações mais rápidas e naturais, combinando decodificação neural com tecnologias de linguagem.</p>
+    
+      <p><strong>Testes clínicos e perspectivas futuras</strong></p>
+      <p>Autorizada pela FDA desde 2023, a Neuralink segue com testes clínicos em humanos nos EUA e no Canadá, com previsão de expansão para outros países.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/03/shutterstock_2508144289-1920x1013.jpg" alt="Imagem ilustrativa sobre cuidados com a saúde dos rins">
+      </div>
+      <h3>Especialistas alertam para hábitos que podem prejudicar a saúde dos rins</h3>
+      <p>Apesar de muitas vezes negligenciados, os rins desempenham funções essenciais como filtrar resíduos do sangue, regular a pressão arterial e produzir hormônios. No entanto, hábitos cotidianos podem comprometer a saúde renal de forma significativa.</p>
+    
+      <p><strong>Fatores de risco e comportamentos nocivos</strong></p>
+      <p>Entre os principais comportamentos nocivos listados pela professora Dipa Kamdar, da Universidade Kingston, estão a ingestão insuficiente de água, consumo de bebidas alcoólicas, tabagismo, obesidade e o uso excessivo de analgésicos. Ela destaca ainda que a alimentação rica em ultraprocessados e a má qualidade do sono também aumentam o risco de doenças renais.</p>
+    
+      <p><strong>Cuidados simples com grande impacto preventivo</strong></p>
+      <p>Beber de 1,5 a 2 litros de água por dia, manter uma alimentação balanceada, dormir de 6 a 8 horas por noite e evitar medicamentos sem orientação médica são atitudes simples que podem preservar a função renal e evitar complicações futuras. A especialista reforça que cuidar dos rins deve ser uma prioridade na rotina de saúde preventiva.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://i0.statig.com.br/bancodeimagens/al/ec/6j/alec6jd1ttjxx31x4b4zmavw6.jpg" alt="Imagem conceitual sobre o avanço da tecnologia médica no combate ao câncer">
+      </div>
+      <h3>Tecnologia médica avança e reacende esperança de cura para o câncer</h3>
+      <p>A medicina vive uma transformação radical, impulsionada por tecnologias como imunoterapia, edição genética e inteligência artificial. Em 2025, a ideia de controlar – e até curar – o câncer deixou de ser utopia para se tornar uma meta real, com tratamentos promissores já em fase clínica e avanços significativos na personalização terapêutica.</p>
+    
+      <p><strong>Vacinas, genética e IA no combate aos tumores</strong></p>
+      <p>Entre as inovações destacadas estão as vacinas de mRNA, que "ensinam" o sistema imunológico a combater tumores, e as terapias genéticas como o CAR-T, que modificam células de defesa para destruir células cancerosas. Há ainda o uso de IA para diagnóstico precoce e tratamentos mais precisos, além de estratégias de prevenção baseadas em estilo de vida saudável e acompanhamento médico regular.</p>
+    
+      <p><strong>Projeções otimistas para as próximas décadas</strong></p>
+      <p>Pesquisadores estimam que até 2040 o câncer poderá ser tratado como uma doença crônica em muitos casos, e até 2050, algumas formas da doença podem ter cura definitiva. A aposta é em um futuro onde ciência, tecnologia e bem-estar emocional caminham juntos para transformar o tratamento do câncer e outras enfermidades complexas.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/cerebro_mente_consciencia-1920x1080.jpg" alt="Imagem conceitual sobre o estudo científico da consciência humana">
+      </div>
+      <h3>Experimento sobre consciência humana gera polêmica e divide neurocientistas</h3>
+      <p>Um dos temas mais intrigantes da neurociência voltou ao centro do debate científico: a origem da consciência. Um experimento internacional liderado pela neurocientista Lucia Melloni, do Instituto Max Planck, testou duas das principais teorias atuais — a Teoria do Espaço Neuronal Global e a Teoria da Informação Integrada — em uma tentativa inédita de “colaboração adversarial”, envolvendo 41 cientistas em oito laboratórios ao redor do mundo.</p>
+    
+      <p><strong>Resultados parciais e ausência de consenso</strong></p>
+      <p>Durante dois anos, 267 voluntários participaram de jogos projetados para medir a percepção consciente, enquanto seus cérebros eram monitorados por tecnologias como fMRI e magnetoencefalografia. O resultado? Ambas as teorias mostraram acertos parciais, mas falharam em explicar completamente o fenômeno, indicando que ainda não há um consenso científico sobre como a consciência emerge.</p>
+    
+      <p><strong>Controvérsia acadêmica e críticas públicas</strong></p>
+      <p>A publicação dos dados na <em>Nature</em> gerou críticas duras. Um grupo de 124 especialistas chegou a classificar a Teoria da Informação Integrada como pseudociência, aumentando a tensão na comunidade científica.</p>
+    
+      <p><strong>Colaboração internacional e próximos passos</strong></p>
+      <p>Mesmo sem uma resposta definitiva, o experimento evidencia a complexidade do tema e aponta para a necessidade de abordagens ainda mais colaborativas e rigorosas. A busca pela compreensão da consciência humana segue como um dos maiores desafios da ciência contemporânea.</p>
+    </article>
+  </section>
+  
+
+
+
+  <section id="deu-ruim" class="news-section">
+    <h2>BUGOU!</h2>
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/2_orplFOPH_6DygRzzN7KJb0LPY=/1024x576/smart/i981125.png" alt="Imagem representativa sobre ajustes no comportamento do ChatGPT mencionados por Sam Altman">
+      </div>
+      <h3>CEO da OpenAI critica “tom irritante” do ChatGPT e promete ajustes</h3>
+      <p>O CEO da OpenAI, Sam Altman, afirmou que o ChatGPT, especialmente na versão baseada no modelo GPT-4o, tem adotado um tom considerado “bajulador e irritante” nas respostas. Segundo ele, a IA estaria “enrolando” demais antes de entregar as informações solicitadas, comportamento que vem incomodando usuários.</p>
+    
+      <p><strong>Melhorias em andamento e personalização futura</strong></p>
+      <p>Altman garantiu que ajustes já estão em andamento para tornar as respostas mais diretas e que, futuramente, será possível escolher diferentes “personalidades” para o chatbot. A reclamação reflete críticas comuns observadas em fóruns como o Reddit, onde usuários compartilham comandos que forçam a IA a ser mais objetiva.</p>
+    
+      <p><strong>Dicas temporárias e próximas atualizações</strong></p>
+      <p>Ainda que o ChatGPT não memorize esses comandos de forma permanente, iniciar as conversas com prompts que pedem respostas curtas e diretas pode amenizar o problema enquanto os ajustes oficiais não são implementados. A OpenAI promete mais mudanças nas próximas semanas.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/apago-e1746019916206-1920x1080.jpg" alt="Imagem representativa do apagão que afetou Portugal e Espanha relacionado à energia renovável">
+      </div>
+      <h3>Apagão atinge Portugal e Espanha e levanta dúvidas sobre estabilidade da energia renovável</h3>
+      <p>Na última segunda-feira (28), um apagão deixou regiões de Portugal e Espanha sem energia elétrica. As autoridades locais investigam a causa da falha, que pode ter se originado em um sistema de energia solar no sudoeste da Espanha.</p>
+    
+      <p><strong>Colapso em cascata e impacto sobre Portugal</strong></p>
+      <p>A hipótese principal aponta para uma perda súbita de geração solar, que provocou um efeito cascata em toda a rede espanhola, da qual Portugal fazia parte no momento. Diferente da França, que conseguiu se desconectar rapidamente da rede, Portugal não teve tempo de isolar seu sistema e foi diretamente impactado.</p>
+    
+      <p><strong>Falta de inércia e limitação das fontes renováveis</strong></p>
+      <p>Especialistas indicam que a falta de “inércia” na rede elétrica — normalmente fornecida por usinas térmicas e hidrelétricas — agravou o problema. Fontes renováveis como solar e eólica, embora essenciais, não possuem essa estabilidade natural. Após o apagão, a Espanha restabeleceu o fornecimento com apoio de usinas térmicas e hidrelétricas.</p>
+    
+      <p><strong>Soluções técnicas e transição energética em pauta</strong></p>
+      <p>Para evitar novos eventos, soluções incluem o uso de inversores com simulação de inércia e geradores síncronos. O caso reacende o debate sobre os desafios técnicos da transição energética e a necessidade de adaptar as redes às fontes renováveis.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/iStock-2130240743-1920x1080.jpg" alt="Imagem representativa da suspeita de uso de IA em artigos acadêmicos">
+      </div>
+      <h3>Artigos acadêmicos sob suspeita: IA é detectada em centenas de publicações científicas</h3>
+      <p>Um número crescente de artigos acadêmicos apresenta sinais de terem sido parcialmente redigidos por inteligências artificiais como o ChatGPT, segundo alertam especialistas. Expressões típicas de chatbots, como “de acordo com minha última atualização de conhecimento” e “certamente, aqui estão”, foram identificadas em diversos textos científicos, sem que os autores tivessem declarado o uso dessas ferramentas.</p>
+    
+      <p><strong>Monitoramento e rastreamento de publicações suspeitas</strong></p>
+      <p>Diante disso, o pesquisador Alex Glynn, da Universidade de Louisville (EUA), criou o rastreador online Academ-AI, que já listou 700 artigos suspeitos. Desses, 13% foram publicados por editoras renomadas, como Elsevier, Springer Nature e MDPI. Outro levantamento, feito pelo polonês Artur Strzelecki, apontou 64 publicações com uso não revelado de IA.</p>
+    
+      <p><strong>Falta de padronização e impacto na credibilidade científica</strong></p>
+      <p>A falta de políticas uniformes entre editoras contribui para a confusão. Algumas, como a Springer, permitem o uso de IA para correções de estilo sem exigir notificação. No entanto, o uso não transparente da tecnologia gera preocupações sobre a integridade científica dos estudos e a eficácia da revisão por pares. Os artigos identificados estão agora sob investigação editorial.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/ia-dados-1920x1080.jpg" alt="Imagem ilustrativa sobre o risco de dados envenenados em sistemas de IA">
+      </div>
+      <h3>O lado obscuro da IA: especialistas alertam para risco de “dados envenenados”</h3>
+      <p>A eficiência da inteligência artificial depende diretamente da qualidade dos dados usados em seu treinamento. No entanto, essa dependência também representa uma vulnerabilidade crítica: ataques silenciosos conhecidos como “envenenamento de dados” podem manipular os modelos, levando a falhas sérias — de erros em respostas de chatbots a riscos em sistemas de transporte ou saúde.</p>
+    
+      <p><strong>Soluções inovadoras com aprendizado federado e blockchain</strong></p>
+      <p>Para enfrentar esse desafio, pesquisadores da Florida International University desenvolveram um sistema que combina aprendizado federado com blockchain. O aprendizado federado permite que o modelo seja treinado diretamente nos dispositivos dos usuários, e o blockchain atua como um filtro, validando atualizações e bloqueando dados maliciosos antes que afetem os algoritmos.</p>
+    
+      <p><strong>Segurança reforçada e aplicações críticas</strong></p>
+      <p>O método, detalhado em estudo publicado no <em>IEEE Access</em>, visa proteger infraestruturas críticas contra manipulações e já é alvo de pesquisas com suporte do Centro Nacional de Segurança Cibernética dos EUA. A equipe também analisa o uso de criptografia quântica para reforçar a segurança de sistemas autônomos e conectados.</p>
+    
+      <p><strong>Confiança na IA exige defesa de sua base de dados</strong></p>
+      <p>À medida que a IA se torna mais integrada à sociedade, proteger seus dados base se torna essencial para manter a confiança e a segurança dos sistemas que moldam o cotidiano.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/shutterstock_2300481037-1920x1080.jpg" alt="Imagem ilustrativa sobre os riscos de interações impróprias com chatbots da Meta">
+      </div>
+      <h3>Chatbots da Meta sob suspeita: investigação revela interações impróprias com menores</h3>
+      <p>Uma investigação do jornal <em>The Wall Street Journal</em> revelou que os chatbots da Meta, incluindo versões com vozes de celebridades como John Cena e Kristen Bell, participaram de conversas sexualizadas com usuários identificados como adolescentes. O problema ocorre tanto com o Meta AI oficial quanto com bots criados por usuários, alguns dos quais chegaram a descrever cenas gráficas envolvendo supostos menores de idade.</p>
+    
+      <p><strong>Flexibilização deliberada e falhas nos filtros</strong></p>
+      <p>A decisão de permitir interações mais "interessantes", inclusive com conotações românticas, teria partido do próprio CEO Mark Zuckerberg, em resposta a críticas sobre a baixa atratividade dos bots da empresa frente à concorrência. Isso resultou em um afrouxamento de filtros, que, segundo a investigação, permitiu simulações inapropriadas.</p>
+    
+      <p><strong>Resposta da Meta e medidas de contenção</strong></p>
+      <p>A Meta afirmou que as conversas foram manipuladas para fins de teste e não refletem o uso real, mas reconheceu as falhas e impôs restrições a contas de menores, além de limitar a atuação de bots com vozes licenciadas em cenários explícitos.</p>
+    
+      <p><strong>Preocupações éticas e riscos emocionais</strong></p>
+      <p>No entanto, companheiros digitais de conteúdo sugestivo seguem disponíveis na plataforma, e especialistas alertam para os danos emocionais potenciais que esses vínculos podem causar em jovens. O caso reacende o debate sobre responsabilidade, segurança infantil e os limites éticos da IA nas redes sociais.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/11/cerebro1-1920x1080.jpg" alt="Imagem ilustrativa sobre a coleta e venda de dados cerebrais por empresas de neurotecnologia">
+      </div>
+      <h3>Empresas são acusadas de vender dados cerebrais de usuários nos EUA</h3>
+      <p>Senadores norte-americanos estão pressionando por regras mais rígidas após denúncias de que empresas de neurotecnologia estariam coletando e comercializando dados cerebrais de usuários. A acusação foi enviada à Comissão Federal de Comércio (FTC), alegando que informações extremamente sensíveis, como padrões cognitivos, estados emocionais e condições de saúde mental, estão sendo compartilhadas sem regulamentação adequada.</p>
+    
+      <p><strong>Coleta não invasiva e brechas legais</strong></p>
+      <p>Esses dados podem ser obtidos por meio de dispositivos como fones de ouvido e apps de realidade virtual, sem a necessidade de implantes invasivos. No entanto, por não serem classificados como equipamentos médicos, esses produtos operam fora das regras de privacidade mais rígidas.</p>
+    
+      <p><strong>Relatório expõe práticas abusivas</strong></p>
+      <p>Um relatório da Neurorights Foundation indicou que 29 das 30 empresas analisadas têm acesso direto aos dados neurais e impõem poucas restrições ao seu uso. Em muitos casos, os consumidores não podem revogar o consentimento nem solicitar a exclusão dessas informações.</p>
+    
+      <p><strong>Pressão legislativa por transparência e proteção</strong></p>
+      <p>Diante do cenário, os senadores pedem normas que obriguem as empresas a informar como os dados são tratados, quem tem acesso a eles e como os direitos de privacidade se aplicam a essa nova fronteira tecnológica.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/chip-eua-1920x1080.jpg" alt="Imagem conceitual representando a disputa geopolítica por chips de inteligência artificial">
+      </div>
+      <h3>Governo Trump avalia reformular regras globais para exportação de chips de IA</h3>
+      <p>A administração Trump estuda mudanças significativas nas regras de exportação de chips de inteligência artificial dos EUA, sinalizando uma possível ruptura com o modelo herdado da gestão Biden. O plano é substituir a atual estrutura de acesso por níveis — que separa países entre aliados, parceiros limitados e nações bloqueadas — por acordos bilaterais, o que transformaria os semicondutores em instrumento direto de barganha geopolítica.</p>
+    
+      <p><strong>Novo modelo de controle e impactos diplomáticos</strong></p>
+      <p>A regra vigente, chamada de Estrutura para Difusão de Inteligência Artificial, entra em vigor em 15 de maio e restringe o envio de chips avançados e modelos de IA a determinados países, com foco em conter o avanço tecnológico da China. No novo modelo, os EUA teriam liberdade para negociar o fornecimento de chips caso a caso, intensificando sua influência comercial e diplomática.</p>
+    
+      <p><strong>Resistência do setor e riscos comerciais</strong></p>
+      <p>A proposta, no entanto, enfrenta resistência de gigantes do setor como Nvidia e Oracle, além de críticas no Congresso. Há receio de que um controle excessivo leve países a buscarem alternativas chinesas, minando o domínio dos EUA na tecnologia de ponta. O governo também considera reduzir o limite atual de exportação sem licença de 1.700 para 500 chips por pedido.</p>
+    
+      <p><strong>Disputa tecnológica e complexidade regulatória</strong></p>
+      <p>Analistas alertam que a simplificação pretendida pode, na prática, criar mais complexidade e incerteza para o setor. A medida reflete a nova fase da "guerra dos chips", onde o controle da tecnologia se tornou uma peça-chave nas disputas comerciais globais.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/nike-1-1920x1080.jpg" alt="Imagem ilustrativa representando a controvérsia jurídica envolvendo os NFTs da Nike">
+      </div>
+      <h3>Nike enfrenta processo de US$ 5 milhões por encerrar projeto de NFTs</h3>
+      <p>A Nike está sendo processada nos Estados Unidos sob acusação de prejudicar investidores ao encerrar um projeto de NFTs baseado em tênis digitais. A ação coletiva, movida por consumidores, alega que a empresa violou leis estaduais de proteção ao consumidor e praticou concorrência desleal ao descontinuar a plataforma, gerando perdas significativas.</p>
+    
+      <p><strong>Promessas de valorização e quebra de expectativas</strong></p>
+      <p>Os tokens foram originalmente promovidos com a expectativa de valorização e acesso a missões com recompensas exclusivas. Após o fim do projeto, os NFTs perderam valor, frustrando os compradores. O processo também acusa a Nike de comercializar valores mobiliários não registrados, já que os ativos digitais foram vendidos sem registro na Comissão de Valores Mobiliários dos EUA.</p>
+    
+      <p><strong>Contexto de retração do mercado digital</strong></p>
+      <p>A ação pede indenização de US$ 5 milhões (cerca de R$ 28 milhões). A Nike, que comprou a RTFKT Studios — criadora dos NFTs — em 2021, ainda não se pronunciou oficialmente. O caso ocorre em meio à retração do mercado de ativos digitais, que teve queda de 63% nas vendas no primeiro trimestre de 2025 em comparação ao ano anterior.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/israel_bandeira-1920x1080.jpg" alt="Imagem representativa do uso de inteligência artificial por Israel em operações militares">
+      </div>
+      <h3>Uso de IA por Israel em Gaza levanta sérias preocupações éticas</h3>
+      <p>Israel tem utilizado ferramentas avançadas de inteligência artificial em operações militares na Faixa de Gaza, despertando intensos debates éticos. A tecnologia, empregada para localizar alvos e otimizar ataques, teve papel central na eliminação de líderes do Hamas, como Ibrahim Biari, mas também resultou em centenas de mortes civis.</p>
+    
+      <p><strong>Algoritmos militares e engenharia avançada</strong></p>
+      <p>Entre os sistemas usados estão algoritmos de áudio, reconhecimento facial, análise de linguagem em dialetos árabes e identificação automatizada de militantes. Essas ferramentas foram desenvolvidas por engenheiros da Unidade 8200 — braço de inteligência de Israel — e reservistas com experiência em empresas como Google, Meta e Microsoft.</p>
+    
+      <p><strong>Preocupações com ética e supervisão</strong></p>
+      <p>Especialistas alertam para os riscos do uso não supervisionado dessas tecnologias, como prisões indevidas, mortes de civis e vigilância em massa. Apesar do alto ganho estratégico, o uso em tempo real de IA para decisões letais ainda carece de regulamentações claras e verificações independentes.</p>
+    
+      <p><strong>Contexto de guerra e busca por governança</strong></p>
+      <p>A rápida implementação das tecnologias foi impulsionada pelos ataques de 7 de outubro de 2023, que deixaram mais de mil mortos em Israel. Autoridades militares afirmam que os sistemas são constantemente refinados e operados dentro da legalidade, mas reconhecem a necessidade de maior controle humano e ética no uso de IA em combate.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/L-Vpyd3EivNSqxBDn8LKy2LO9ww=/1024x576/smart/i1002357.png" alt="Imagem representativa da redução de aplicativos na Google Play Store">
+      </div>
+      <h3>Google Play Store remove quase metade dos apps em um ano</h3>
+      <p>A Google Play Store passou por uma das maiores reduções de conteúdo de sua história: o número de aplicativos caiu de 3,4 milhões para 1,8 milhão desde o início de 2024, segundo relatório da consultoria Appfigures. A queda de 47% contrasta com a estabilidade da App Store da Apple, que cresceu discretamente no mesmo período.</p>
+    
+      <p><strong>Endurecimento de regras e foco na qualidade</strong></p>
+      <p>A mudança estaria ligada ao endurecimento das políticas de publicação do Google, com foco em remover apps de baixa qualidade, inúteis ou enganosos. Desde agosto de 2024, passaram a ser banidos apps que travam, não funcionam corretamente, contêm apenas texto, imagens ou PDFs.</p>
+    
+      <p><strong>Revisão mais rigorosa e medidas punitivas</strong></p>
+      <p>A empresa também implementou testes obrigatórios para novos desenvolvedores e aumentou a revisão humana antes da publicação. Em janeiro de 2025, o Google anunciou ter barrado 2,6 milhões de aplicativos e banido 158 mil desenvolvedores por violações das diretrizes.</p>
+    
+      <p><strong>Menos volume, mais segurança</strong></p>
+      <p>Com isso, a empresa busca melhorar a experiência do usuário e combater aplicativos fraudulentos, mesmo que isso signifique uma redução expressiva no volume de ofertas da loja.</p>
+    </article>    
+  </section>
+  
+
+
+
+  <section id="noticias-variadas" class="news-section">
+    <h2>NOTÍCIAS VARIADAS</h2>
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/Destaque-Nvidia-e-Huawei-1920x1080.jpg" alt="Imagem ilustrativa sobre o chip Ascend 910D da Huawei">
+      </div>
+      <h3>Huawei testa novo chip de IA para enfrentar domínio da Nvidia</h3>
+      <p>A Huawei está iniciando testes com seu novo chip de inteligência artificial, o Ascend 910D, numa tentativa de competir diretamente com a Nvidia, especialmente após restrições dos EUA ao fornecimento de semicondutores avançados para a China.</p>
+    
+      <p><strong>Desempenho competitivo e limitações técnicas</strong></p>
+      <p>O 910D utiliza tecnologias avançadas de encapsulamento para maior desempenho e foi descrito por fontes próximas como mais poderoso que o chip H100 da Nvidia, embora consuma mais energia e tenha menor eficiência. Os primeiros testes com empresas chinesas devem começar até o final de maio de 2025.</p>
+    
+      <p><strong>Autossuficiência chinesa em semicondutores</strong></p>
+      <p>Essa iniciativa faz parte do esforço da China por autossuficiência em semicondutores, com a Huawei desempenhando papel central. A empresa já planeja distribuir mais de 800 mil unidades dos chips Ascend 910B e 910C ainda este ano para parceiros como operadoras estatais e a ByteDance, controladora do TikTok.</p>
+    
+      <p><strong>Geopolítica e oportunidades no mercado interno</strong></p>
+      <p>O cenário geopolítico também influencia a movimentação: o chip H20 da Nvidia, antes permitido na China, agora enfrenta novas restrições impostas por Washington, criando espaço para que alternativas chinesas ganhem mercado.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/shutterstock_1873982623-1-1920x1080.jpg" alt="Imagem ilustrativa representando investimento da IBM em computação quântica">
+      </div>
+      <h3>IBM anuncia investimento de US$ 150 bilhões nos EUA com foco em computação quântica</h3>
+      <p>A IBM revelou planos de investir US$ 150 bilhões nos Estados Unidos nos próximos cinco anos, com destaque para a ampliação de suas operações em computação quântica e fabricação de mainframes. Desse montante, mais de US$ 30 bilhões serão destinados exclusivamente ao avanço da tecnologia quântica.</p>
+    
+      <p><strong>Computação quântica como diferencial estratégico</strong></p>
+      <p>A empresa já é referência no setor e pretende reforçar sua posição frente à concorrência, como o Google, que recentemente apresentou seu chip quântico Willow. Os computadores quânticos utilizam qubits, capazes de processar múltiplas variáveis simultaneamente, o que acelera soluções em áreas como medicina, segurança e ciência de materiais.</p>
+    
+      <p><strong>Alinhamento político e estímulo à produção nacional</strong></p>
+      <p>Além do avanço tecnológico, analistas enxergam o anúncio como um movimento político da IBM para alinhar-se com a política industrial de Donald Trump. As tarifas impostas pelo governo republicano, que podem ultrapassar 100% sobre produtos chineses, incentivam investimentos em fabricação local. O gesto segue uma tendência de grandes empresas como Nvidia e Apple, que também anunciaram investimentos bilionários nos EUA.</p>
+    
+      <p><strong>Corrida tecnológica e soberania digital</strong></p>
+      <p>A computação quântica, considerada estratégica para o futuro da inteligência artificial e da segurança cibernética, está no centro da nova corrida tecnológica global.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/10/data-center-1920x1080.jpg" alt="Imagem ilustrativa representando o investimento em data centers sustentáveis no Brasil">
+      </div>
+      <h3>Brasil mira protagonismo global com incentivo a data centers sustentáveis</h3>
+      <p>O ministro da Fazenda, Fernando Haddad, prepara uma viagem ao Vale do Silício com o objetivo de atrair investidores para o setor de data centers no Brasil. A estratégia envolve a oferta de isenção de impostos federais, como PIS, Cofins, IPI e taxas de importação, visando estimular a construção de centros de dados no país.</p>
+    
+      <p><strong>Energia limpa como diferencial competitivo</strong></p>
+      <p>A proposta busca aproveitar o potencial brasileiro em energia renovável, fator crucial para o funcionamento de data centers, que demandam altos volumes de energia. A intenção é transformar o Brasil em um polo atrativo para empresas que priorizam infraestrutura sustentável, especialmente no contexto da crescente demanda por inteligência artificial.</p>
+    
+      <p><strong>Projeção econômica e contrapartidas</strong></p>
+      <p>O governo estima que a iniciativa pode gerar até R$ 2 trilhões em investimentos ao longo da próxima década. Entre os critérios para obtenção dos benefícios estão o uso de energia 100% limpa e a obrigatoriedade de destinar parte da capacidade de operação ao mercado nacional.</p>
+    
+      <p><strong>Oportunidade estratégica no cenário geopolítico</strong></p>
+      <p>A movimentação ocorre em um cenário de disputa geopolítica envolvendo China e EUA, o que pode abrir espaço para o Brasil se firmar como alternativa confiável para grandes empresas globais de tecnologia.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/T659JmkFEiKMxy44eOeqoZ6xW7w=/1024x576/smart/i955773.jpeg" alt="Imagem representativa da megafábrica de chips da TSMC nos Estados Unidos">
+      </div>
+      <h3>TSMC inicia construção de megafábrica de chips nos EUA com investimento de US$ 100 bilhões</h3>
+      <p>A TSMC (Taiwan Semiconductor Manufacturing Company) começou oficialmente a construção de sua nova fábrica no Arizona, nos Estados Unidos. A iniciativa faz parte de um acordo bilionário que visa reduzir a dependência americana de semicondutores estrangeiros e contornar as tarifas comerciais impostas pelo governo Trump.</p>
+    
+      <p><strong>Investimento histórico e foco em chips de ponta</strong></p>
+      <p>A nova instalação é parte de um pacote de investimentos que totaliza US$ 100 bilhões, dos quais US$ 65 bilhões já foram aplicados. A planta será focada na produção de chips de última geração voltados ao mercado local, especialmente para gigantes como Apple, NVIDIA e AMD — todas dependentes da TSMC para suprimento de processadores avançados.</p>
+    
+      <p><strong>Impacto econômico e geopolítico</strong></p>
+      <p>O projeto deve empregar cerca de 40 mil pessoas e injetar mais de US$ 200 bilhões na economia do Arizona. Com isso, os EUA fortalecem sua posição na cadeia global de suprimento de semicondutores, enquanto a TSMC ganha margem de operação frente a sanções e tarifas geopolíticas.</p>
+    
+      <p><strong>Desafios regulatórios e expansão estratégica</strong></p>
+      <p>O desafio, no entanto, será compatibilizar a expansão com as restrições de exportação de tecnologia impostas por Taiwan.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/05/iter-1920x1080.jpg" alt="Imagem ilustrativa do maior ímã supercondutor instalado no projeto ITER">
+      </div>
+      <h3>Fusão nuclear: maior ímã do mundo é instalado em megaprojeto internacional na França</h3>
+      <p>O projeto ITER (Reator Termonuclear Experimental Internacional), sediado no sul da França, deu um passo crucial ao concluir a montagem do maior ímã supercondutor já construído. A peça é vital para manter o plasma – gás superaquecido essencial à fusão nuclear – confinado e estável durante os testes.</p>
+    
+      <p><strong>Colaboração global e engenharia de ponta</strong></p>
+      <p>A iniciativa reúne mais de 30 países, incluindo EUA, China, Rússia e membros da União Europeia, com o objetivo de replicar a fusão que ocorre no Sol e gerar energia limpa praticamente ilimitada. O solenoide central, ímã que atua como “gaiola magnética”, foi construído nos EUA e agora começa a ser instalado no reator.</p>
+    
+      <p><strong>Avanços, atrasos e expectativa futura</strong></p>
+      <p>Apesar de um atraso de quatro anos, o ITER avança com ritmo acelerado. Os primeiros testes com plasma estão previstos para 2033. Ainda assim, o custo e a viabilidade comercial da fusão nuclear permanecem como grandes desafios. Enquanto isso, empresas privadas prometem alternativas mais rápidas, embora com ceticismo por parte de especialistas do projeto.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2021/03/Bicicleta-eletrica-1024x683.jpg" alt="Imagem ilustrativa sobre o crescimento das bicicletas elétricas no Brasil">
+      </div>
+      <h3>Bicicletas elétricas transformam mobilidade urbana no Brasil</h3>
+      <p>O mercado de bicicletas elétricas (e-bikes) no Brasil vive uma expansão acelerada, impulsionado pela busca por alternativas sustentáveis aos altos custos do transporte e congestionamentos urbanos. Desde 2016, o país pode ter ultrapassado a marca de 300 mil unidades vendidas, com crescimento notável entre 2022 e 2024.</p>
+    
+      <p><strong>Mercado aquecido e diversidade de modelos</strong></p>
+      <p>Fabricantes nacionais como Caloi e Sense dividem espaço com marcas globais, e as vendas se concentram em modelos urbanos, utilizados como meio de transporte diário. Os preços variam de R$ 5 mil a mais de R$ 70 mil, e a carga tributária é apontada como obstáculo à democratização do acesso.</p>
+    
+      <p><strong>Avanços regulatórios e infraestrutura</strong></p>
+      <p>Com a regulamentação do uso das e-bikes pelo Contran em 2023 e o aumento da infraestrutura cicloviária, o setor se fortalece. No entanto, desafios como segurança, locais para recarga e custo inicial ainda precisam ser superados para consolidar a revolução das e-bikes no cenário urbano brasileiro.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://tm.ibxk.com.br/2025/04/04/04111302615038.jpg?ims=1280x605" alt="Imagem representativa da proposta Pix Pensão no Brasil">
+      </div>
+      <h3>Pix Pensão: nova proposta automatiza pagamentos de pensão alimentícia no Brasil</h3>
+      <p>Um novo projeto de lei aprovado em comissão da Câmara dos Deputados pode transformar a forma de cobrança de pensão alimentícia no Brasil. Batizado de "Pix Pensão", o sistema propõe o uso do Pix como mecanismo automático de pagamento, facilitando transferências mensais determinadas judicialmente e reduzindo a inadimplência.</p>
+    
+      <p><strong>Automação e penhora direta</strong></p>
+      <p>A proposta, de autoria da deputada Tabata Amaral (PSB-SP), estabelece que, uma vez determinada a pensão, o valor seja debitado diretamente de contas bancárias do responsável, sem necessidade de autorização judicial para cada cobrança. O sistema permite a penhora automática de valores, inclusive de contas empresariais, como MEI ou microempresa, se necessário.</p>
+    
+      <p><strong>Agilidade, transparência e proteção aos dependentes</strong></p>
+      <p>A iniciativa visa modernizar o Código Civil e dar mais agilidade aos processos, beneficiando diretamente as crianças e adolescentes que dependem da pensão. Além de reduzir o trabalho do Estado, a medida busca dificultar a inadimplência e aumentar a transparência por meio da divulgação de estatísticas detalhadas.</p>
+    
+      <p><strong>Próximos passos no Congresso</strong></p>
+      <p>O projeto ainda precisa passar pela Comissão de Constituição e Justiça antes de seguir para o Senado e posterior sanção presidencial. Se aprovado, o Pix Pensão pode se tornar um novo marco na responsabilização parental e na proteção dos direitos dos alimentandos.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://t.ctcdn.com.br/YXAIZ5Tz7cfF3XzmTiR8CIqbPAU=/1024x576/smart/i1001477.jpeg" alt="Imagem ilustrativa sobre riscos e desafios da biometria digital">
+      </div>
+      <h3>Biometria em foco: riscos e desafios de um dado que não pode ser trocado</h3>
+      <p>O uso crescente de tecnologias biométricas — como reconhecimento facial e impressões digitais — levanta sérias preocupações sobre segurança e privacidade. Em entrevista recente, Marta Schuh, diretora de Cyber & Tech Insurance da Howden Brasil, alerta: "A biometria é única. Se vazar, não tem como trocar".</p>
+    
+      <p><strong>Dados permanentes e riscos irreversíveis</strong></p>
+      <p>Diferentemente de senhas ou documentos que podem ser substituídos, dados biométricos identificam características permanentes do corpo humano. O vazamento dessas informações pode facilitar fraudes, roubo de identidade e a criação de contas falsas.</p>
+    
+      <p><strong>Deepfakes, IA e novas ameaças digitais</strong></p>
+      <p>A situação se agrava com a popularização da Inteligência Artificial e dos deepfakes, que possibilitam a falsificação realista de rostos e vozes. Além disso, projetos como o WorldID, que propõem uma identidade global baseada na íris, trazem riscos adicionais se não houver uma estrutura sólida de proteção de dados.</p>
+    
+      <p><strong>Direitos do cidadão e papel da LGPD</strong></p>
+      <p>Marta ressalta que o cidadão pode e deve recusar a coleta de biometria em locais onde há alternativas válidas, como RG e CNH. A Lei Geral de Proteção de Dados (LGPD) garante o direito de não fornecer e solicitar a exclusão desses dados.</p>
+    
+      <p><strong>Educação digital como barreira de proteção</strong></p>
+      <p>Para especialistas, apenas a tecnologia não basta: é necessário investir em educação digital. Afinal, a maioria dos incidentes de segurança ainda parte de falhas humanas. Informação e cautela são essenciais para lidar com esse novo cenário.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2024/06/sam_altman_openai-1024x682.jpg" alt="Imagem ilustrativa representando a crise na parceria entre OpenAI e Microsoft">
+      </div>
+      <h3>Parceria entre OpenAI e Microsoft entra em crise após anos de cooperação estratégica</h3>
+      <p>Uma das alianças mais emblemáticas da era da inteligência artificial enfrenta turbulências. A relação entre OpenAI e Microsoft, iniciada em 2018 e fortalecida com investimentos bilionários, atravessa sua fase mais delicada. Os CEOs Sam Altman e Satya Nadella, antes próximos, agora se comunicam apenas em reuniões formais e pontuais.</p>
+    
+      <p><strong>Do investimento à desconfiança</strong></p>
+      <p>A Microsoft foi uma das primeiras a apostar na OpenAI, investindo US$ 1 bilhão em 2019 e ampliando o aporte para mais de US$ 10 bilhões após o sucesso do ChatGPT. O acordo incluía acesso exclusivo à tecnologia da startup e o uso de infraestrutura em nuvem da Microsoft.</p>
+    
+      <p><strong>Disputas por recursos e autonomia tecnológica</strong></p>
+      <p>Com o tempo, no entanto, surgiram atritos. Altman busca mais recursos computacionais para avançar em direção à AGI (inteligência artificial geral), enquanto a Microsoft demonstra frustração com atrasos em projetos como o modelo “Strawberry”. A empresa também passou a desenvolver suas próprias soluções internas de IA, sinalizando perda de confiança na parceria.</p>
+    
+      <p><strong>Riscos e reconfigurações estratégicas</strong></p>
+      <p>Tensões se intensificaram com iniciativas paralelas da OpenAI, como o acordo com a SoftBank e Oracle, que surpreendeu a Microsoft. O risco de bloqueios mútuos — como a restrição de acesso a tecnologias ou veto à reestruturação da OpenAI — coloca em xeque o futuro da colaboração entre as gigantes.</p>
+    
+      <p><strong>Fim de uma era colaborativa?</strong></p>
+      <p>Embora ambas sigam no mercado de IA com projetos ambiciosos, o distanciamento entre OpenAI e Microsoft simboliza uma mudança de era, onde interesses estratégicos podem superar parcerias históricas.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/09/deepfake-1920x1080.png" alt="Imagem representativa da legislação contra pornografia de vingança nos EUA">
+      </div>
+      <h3>Estados Unidos criminalizam pornografia de vingança com nova legislação federal</h3>
+      <p>A Câmara dos Representantes dos EUA aprovou, por ampla maioria, a nova lei federal “Take it Down”, que criminaliza a divulgação de imagens íntimas não consensuais, incluindo aquelas geradas por inteligência artificial (IA). A proposta agora aguarda sanção do presidente Donald Trump, que já se comprometeu a promulgar a medida.</p>
+    
+      <p><strong>Combate à violência digital e uso indevido da IA</strong></p>
+      <p>A nova legislação busca proteger vítimas de “pornografia de vingança” e deepfakes sexuais, uma prática crescente viabilizada por tecnologias de manipulação digital. A lei prevê não apenas punição criminal, mas também a remoção obrigatória dos conteúdos das plataformas online.</p>
+    
+      <p><strong>Apoio político e repercussão social</strong></p>
+      <p>O projeto é apoiado pela primeira-dama Melania Trump e visa combater a violência de gênero e salvaguardar a privacidade individual, em meio ao avanço de ferramentas que dificultam a identificação de imagens falsas. Estados como Califórnia e Flórida já adotaram legislações semelhantes em âmbito local.</p>
+    
+      <p><strong>Liberdade de expressão e desafios jurídicos</strong></p>
+      <p>Críticos, no entanto, alertam para possíveis riscos à liberdade de expressão e à ampliação de poderes de censura por parte do Estado. A medida reacende o debate global sobre os limites éticos e legais do uso da IA na criação de conteúdos digitais.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/Celular-com-malware-1920x1080.jpg" alt="Imagem representativa do alerta sobre novo malware em celulares Android">
+      </div>
+      <h3>Alerta: novo malware clona cartões de crédito em celulares Android via golpe sofisticado</h3>
+      <p>Usuários de Android devem redobrar a atenção: um novo golpe digital, identificado pela empresa de cibersegurança Cleafy, utiliza um malware chamado <strong>SuperCard X</strong> para clonar dados de cartões de crédito remotamente. A ameaça, detectada inicialmente na Itália, combina técnicas de engenharia social com funcionalidades do próprio celular para efetuar fraudes financeiras em tempo real.</p>
+    
+      <p><strong>Golpe começa com mensagem falsa e ligação simulada</strong></p>
+      <p>O ataque começa com um <strong>falso alerta bancário por SMS ou WhatsApp</strong>, seguido de uma ligação telefônica onde criminosos se passam por atendentes. Durante a conversa, a vítima é induzida a instalar um aplicativo “de segurança”, que, na verdade, contém o malware.</p>
+    
+      <p><strong>Modo NFC ativado e clonagem em tempo real</strong></p>
+      <p>Após a instalação, o SuperCard X ativa o <strong>modo NFC do celular</strong> e solicita que o usuário aproxime seu cartão físico ao aparelho para uma suposta verificação. Nesse momento, os dados são capturados e enviados a um segundo dispositivo controlado pelos criminosos, que realizam transações imediatas.</p>
+    
+      <p><strong>Técnica TOAD e propagação por mensageiros</strong></p>
+      <p>A técnica, conhecida como <strong>Ataque Orientado por Telefone (TOAD)</strong>, tem baixa taxa de detecção por antivírus e pode afetar cartões de <strong>qualquer instituição financeira</strong>. A Cleafy alerta para o uso crescente de canais como Telegram e WhatsApp para disseminar o vírus.</p>
+    
+      <p><strong>Recomendações de segurança digital</strong></p>
+      <p>Especialistas recomendam que usuários <strong>não cliquem em links recebidos por mensagens suspeitas</strong>, evitem chamadas de números desconhecidos com pedidos de dados bancários e <strong>nunca instalem aplicativos fora de lojas oficiais</strong>.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/shutterstock_2593383917-1-1920x1080.jpg alt="Imagem ilustrativa sobre o acordo de exploração mineral entre EUA e Ucrânia">
+      </div>
+      <h3>EUA e Ucrânia fecham acordo sobre exploração de minerais críticos</h3>
+      <p>Os governos dos Estados Unidos e da Ucrânia firmaram um acordo estratégico que garante aos norte-americanos acesso aos minerais de terras raras em território ucraniano. O pacto prevê que <strong>50% dos lucros com a exploração desses recursos serão destinados à reconstrução da Ucrânia</strong>, sem transferir a propriedade das reservas, que permanece sob domínio do Estado ucraniano.</p>
+    
+      <p><strong>Interesse em materiais estratégicos</strong></p>
+      <p>O anúncio foi feito por representantes dos dois países em Washington e reforça o interesse dos EUA em garantir o fornecimento de materiais estratégicos utilizados em eletrônicos, tecnologias limpas e armamentos. A <strong>Ucrânia possui 22 dos 50 minerais considerados críticos</strong> pelo Serviço Geológico dos EUA.</p>
+    
+      <p><strong>Alinhamento político e soberania</strong></p>
+      <p>Apesar de não incluir garantias militares contra a Rússia, o acordo simboliza o apoio contínuo à soberania ucraniana e fortalece o alinhamento estratégico entre Kiev e Washington. O presidente Donald Trump, que retornou recentemente à Casa Branca, teria pressionado por esse acordo como parte de sua estratégia econômica e geopolítica.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/06/ByteDance-1024x635.jpg" alt="Imagem ilustrativa da possível instalação de data center da ByteDance no Brasil">
+      </div>
+      <h3>ByteDance estuda instalação de data center no Brasil com foco em energia renovável</h3>
+      <p>A ByteDance, controladora do TikTok, está avaliando a construção de um grande data center no Brasil, de acordo com informações da agência Reuters. O projeto, que deve ser instalado no complexo portuário do Pecém, no Ceará, poderá aproveitar a abundante energia eólica da região.</p>
+    
+      <p><strong>Estrutura estratégica e sustentável</strong></p>
+      <p>O plano inicial prevê uma estrutura de 300 MW, com possibilidade de expansão para até 900 MW, tornando o país um dos pilares das operações da empresa no Hemisfério Ocidental. O local é considerado estratégico por estar próximo a estações de cabos submarinos e por concentrar fontes de energia limpa.</p>
+    
+      <p><strong>Parceria com a Casa dos Ventos</strong></p>
+      <p>A iniciativa seria viabilizada por meio de uma parceria com a geradora Casa dos Ventos, que busca transformar o Pecém em um polo tecnológico e energético. Apesar de ainda não confirmada oficialmente pela ByteDance, a empresa brasileira já destacou que o projeto integra seus planos para o maior data center e projeto de hidrogênio verde do país.</p>
+    
+      <p><strong>Infraestrutura nacional e projeção global</strong></p>
+      <p>O Ministério de Minas e Energia avalia ampliar a capacidade da rede elétrica na região para viabilizar projetos desse porte.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/11/IA-treinamento-1920x1080.jpg" alt="Imagem ilustrativa sobre tecnologia no ensino de inglês no Brasil">
+      </div>
+      <h3>Tecnologia pode reduzir desigualdades no ensino de inglês no Brasil</h3>
+      <p>No Dia Mundial da Educação, celebrado em 28 de abril, especialistas destacam o potencial da tecnologia para transformar o ensino público no Brasil, especialmente no aprendizado de inglês — habilidade essencial no cenário global atual. Apesar disso, o país ocupa a <strong>70ª posição no Índice de Proficiência em Inglês da EF</strong>, refletindo desigualdades no acesso ao idioma, principalmente entre alunos da rede pública.</p>
+    
+      <p><strong>Avanço por meio de soluções digitais</strong></p>
+      <p>Com soluções digitais escaláveis, como plataformas com inteligência artificial e tutores virtuais, mais de <strong>3,7 milhões de estudantes brasileiros</strong> já foram beneficiados. A personalização do ensino, com trilhas de progresso e simulações reais, tem se mostrado eficaz. No entanto, o uso da tecnologia exige integração pedagógica e capacitação docente para surtir efeito real.</p>
+    
+      <p><strong>Inclusão educacional e futuro global</strong></p>
+      <p>Iniciativas semelhantes já estão sendo implementadas em estados brasileiros e em outros países da América Latina. Investir em educação digital inclusiva é, segundo especialistas, garantir que alunos em qualquer região tenham acesso às mesmas oportunidades que jovens em centros desenvolvidos.</p>
+    </article>      
+  </section>
+
+
+
+  
+  <section id="curiosidades" class="news-section">
+    <h2>CURIOSIDADES, ANÁLISES E DICAS</h2>   
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://tm.ibxk.com.br/2025/04/25/25161344293431.jpg?ims=1280x605" alt="Imagem ilustrativa sobre o uso de tecnologia no ensino de inglês nas escolas públicas">
+      </div>
+      <h3>Tecnologia pode reduzir desigualdades no ensino de inglês no Brasil</h3>
+      <p>No Dia Mundial da Educação, celebrado em 28 de abril, especialistas destacam o potencial da tecnologia para transformar o ensino público no Brasil, especialmente no aprendizado de inglês — habilidade essencial no cenário global atual. Apesar disso, o país ocupa a <strong>70ª posição no Índice de Proficiência em Inglês da EF</strong>, refletindo desigualdades no acesso ao idioma, principalmente entre alunos da rede pública.</p>
+    
+      <p><strong>Soluções digitais e inteligência artificial</strong></p>
+      <p>Com soluções digitais escaláveis, como plataformas com inteligência artificial e tutores virtuais, mais de <strong>3,7 milhões de estudantes brasileiros</strong> já foram beneficiados. A personalização do ensino, com trilhas de progresso e simulações reais, tem se mostrado eficaz. No entanto, o uso da tecnologia exige integração pedagógica e capacitação docente para surtir efeito real.</p>
+    
+      <p><strong>Inclusão educacional como política de futuro</strong></p>
+      <p>Iniciativas semelhantes já estão sendo implementadas em estados brasileiros e em outros países da América Latina. Investir em educação digital inclusiva é, segundo especialistas, garantir que alunos em qualquer região tenham acesso às mesmas oportunidades que jovens em centros desenvolvidos.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/07/cancelamentos-1-1-1024x683.jpg" alt="Imagem ilustrativa de apagão elétrico e segurança digital">
+      </div>
+      <h3>Apagão em Portugal e Espanha levanta debate sobre cibersegurança no setor elétrico</h3>
+      <p>O blecaute que afetou Portugal e Espanha no dia 28 de abril, inicialmente atribuído a um possível ataque cibernético, reacendeu questionamentos sobre a vulnerabilidade das redes elétricas modernas. Apesar de as autoridades europeias terem descartado a hipótese de ação hacker, os impactos foram severos: voos cancelados, sistemas de transporte paralisados e comunicação comprometida.</p>
+    
+      <p><strong>Alerta para riscos digitais nas redes de energia</strong></p>
+      <p>Diante do episódio, surge a dúvida sobre o potencial de um ciberataque causar um apagão no Brasil. Segundo o especialista em tecnologia Arthur Igreja, o risco é real. Ele explica que a crescente digitalização das infraestruturas críticas, como o sistema elétrico, abre brechas para ameaças cibernéticas — especialmente se protocolos de segurança não forem rigorosamente aplicados.</p>
+    
+      <p><strong>Brasil precisa reforçar sua ciberdefesa energética</strong></p>
+      <p>O Brasil, embora tenha um sistema interligado robusto, precisa reforçar a proteção contra ataques digitais. A adoção de medidas preventivas, como redes segmentadas, monitoramento constante e capacitação em cibersegurança, é essencial para evitar colapsos energéticos provocados por agentes mal-intencionados.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2024/11/inteligencia_artificial-1920x1053.jpg" alt="Imagem ilustrativa sobre brasileiros treinando IAs com foco em segurança e ética">
+      </div>
+      <h3>Brasileiros ajudam a treinar IAs para garantir respostas seguras e responsáveis</h3>
+      <p>Enquanto a inteligência artificial se consolida como ferramenta cotidiana, cresce também a preocupação com os riscos que ela pode representar. Para mitigar problemas, um grupo de brasileiros atua diretamente na linha de frente do treinamento de modelos de IA, com foco em segurança e precisão das respostas.</p>
+    
+      <p><strong>Trabalho estratégico por trás das respostas das IAs</strong></p>
+      <p>Financiada pela intermediária Outlier, que conecta profissionais globais a grandes empresas de tecnologia, a iniciativa envolve a criação de prompts e a análise crítica das respostas geradas por chatbots. O objetivo é garantir que os sistemas não incentivem comportamentos perigosos ou disseminem informações falsas — como já ocorreu em respostas envolvendo temas sensíveis, como nazismo e eleições.</p>
+    
+      <p><strong>Supervisão humana como eixo ético da IA</strong></p>
+      <p>Esse trabalho se mostra essencial para corrigir falhas que ainda persistem. Casos em que sistemas de IA sugeriram ações absurdas ou perigosas, como comer pedras ou colar pizza com adesivo, exemplificam os desafios. O grupo atua para reforçar os filtros da IA, principalmente contra tentativas indiretas de contornar os bloqueios automatizados.</p>
+    
+      <p>A iniciativa evidencia que, mesmo com os avanços da tecnologia, a supervisão humana segue indispensável no desenvolvimento de inteligências artificiais confiáveis e éticas.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2023/12/minicerebro-ia-1024x721.jpg" alt="Imagem ilustrativa sobre limitações cognitivas da inteligência artificial">
+      </div>
+      <h3>IA ainda está longe de pensar como humanos, dizem especialistas</h3>
+      <p>Apesar de avanços recentes em modelos de linguagem como ChatGPT e Claude, pesquisadores alertam que a inteligência artificial ainda não alcançou o raciocínio de nível humano. Estudos recentes mostram que esses sistemas operam com base em grandes conjuntos de heurísticas — atalhos práticos — e não em verdadeiros modelos mentais que envolvam causa, efeito e adaptação ao contexto.</p>
+    
+      <p><strong>Erros sutis revelam ausência de cognição genuína</strong></p>
+      <p>Pesquisas revelaram falhas curiosas: modelos que geram rotas urbanas, por exemplo, criam mapas distorcidos e incoerentes, embora consigam orientar usuários com alta precisão. Em matemática, os sistemas adotam regras inconsistentes dependendo dos números envolvidos, o que revela uma abordagem não generalizada. Pequenas alterações no ambiente digital, como o bloqueio de 1% das rotas, também causam grandes quedas de desempenho.</p>
+    
+      <p><strong>Imitação, não compreensão</strong></p>
+      <p>Essas limitações indicam que os modelos atuais ainda são essencialmente mecanismos de improvisação, e não de compreensão. Para especialistas, essa realidade impõe barreiras à evolução rumo à inteligência artificial geral (IAG), enquanto reforça a importância de novas abordagens para desenvolver sistemas mais confiáveis, flexíveis e adaptáveis.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://i0.statig.com.br/bancodeimagens/e8/tp/or/e8tporou3ynisgzp6q5qvwrtt.jpg" alt="Imagem representativa do trabalho híbrido com inteligência artificial e dilemas humanos contemporâneos">
+      </div>
+      <h3>Trabalho híbrido com IA: desafio humano no século da inteligência algorítmica</h3>
+      <p>Em uma era marcada pela ascensão das inteligências artificiais e pela digitalização das relações profissionais, o trabalho híbrido assume um novo significado. Em reflexão publicada no portal iG, o filósofo Pedro Cortella debate o papel humano frente à presença crescente de algoritmos, em especial com a Geração Z já imersa desde o nascimento em ambientes digitais.</p>
+    
+      <p><strong>Humanidade diante da máquina</strong></p>
+      <p>Ao lado de Gabriel Spricigo, jovem empreendedor e conhecedor das ferramentas de IA desde seus primórdios, Cortella questiona o que permanece autenticamente humano em um contexto onde clones digitais, bots amorosos e terapias conduzidas por IA se tornam realidade. O contraste entre o otimismo de Gabriel e o ceticismo do filósofo revela uma síntese necessária: mais do que discutir eficiência, é urgente refletir sobre identidade, responsabilidade e limites éticos da tecnologia.</p>
+    
+      <p><strong>O risco da delegação total</strong></p>
+      <p>A discussão vai além da técnica. Fala sobre angústia, hiperprodutividade e a tentação de delegar à máquina não só tarefas, mas decisões. Em um mundo em que a IA avança sobre o pensamento, Cortella alerta: o verdadeiro risco pode não estar na substituição, mas na passividade. Pensar, afinal, ainda é um ato essencialmente humano.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/shutterstock_2296838121-1920x1080.jpg" alt="Imagem representativa da Carteira de Trabalho Digital">
+      </div>
+      <h3>Carteira de Trabalho Digital ganha destaque no Dia do Trabalho</h3>
+      <p>No Dia do Trabalho, celebrado em 1º de maio, a Carteira de Trabalho Digital se consolida como uma das principais inovações tecnológicas voltadas ao trabalhador formal brasileiro. Desde 2019, a versão física do documento foi substituída pela plataforma digital, acessível via aplicativo ou site do Gov.br.</p>
+    
+      <p><strong>Mobilidade, agilidade e acesso ao crédito</strong></p>
+      <p>Além de registrar vínculos empregatícios, a CTPS Digital é indispensável para serviços modernos como o novo empréstimo consignado com garantia do FGTS. A contratação, consulta de propostas e portabilidade de contratos são realizadas inteiramente pelo aplicativo, sem burocracia presencial.</p>
+    
+      <p><strong>Integração com o CPF e Gov.br</strong></p>
+      <p>O documento digital utiliza o CPF como identificação e dispensa apresentação física para novos registros de trabalho. Empresas realizam as atualizações diretamente pelo sistema eSocial. Ainda assim, a carteira impressa deve ser mantida para fins de comprovação de vínculos anteriores a 2019.</p>
+    
+      <p>A CTPS Digital é um exemplo prático de como a transformação digital pode simplificar a vida do trabalhador, integrando tecnologia e cidadania em um único canal.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/01/fachada_nvidia-1024x683.jpg" alt="Imagem representativa da era da IA no Brasil">
+      </div>
+      <h3>Brasil na era da IA: chips, energia verde e ambições digitais</h3>
+      <p>Com a corrida global por chips e a ascensão da inteligência artificial, o Brasil se vê diante de uma oportunidade única. A energia renovável do país é considerada trunfo estratégico para atrair data centers de big techs que buscam operações sustentáveis.</p>
+      
+      <p><strong>Mercado global e reposicionamento estratégico</strong></p>
+      <p>Em entrevista ao <em>Olhar Digital News</em>, Márcio Aguiar, diretor da divisão Enterprise da Nvidia para a América Latina, comentou as perspectivas do setor. Segundo ele, as tensões comerciais dos EUA, como os tarifaços de Trump, reconfiguram o mercado e reforçam o interesse por alternativas fora dos grandes polos industriais tradicionais.</p>
+    
+      <p><strong>Brasil como hub tecnológico</strong></p>
+      <p>Aguiar destacou o potencial do Brasil para se tornar um hub tecnológico, especialmente com projetos em andamento como a “cidade data center” e parcerias com empresas globais. A expectativa é que, com investimentos certos e incentivos adequados, o país possa decolar como fornecedor estratégico na nova economia baseada em IA.</p>
+    </article>
+
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/IA-prevendo-assassinato-1024x768.jpg" alt="Imagem representativa da IA preditiva em segurança pública no Reino Unido">
+      </div>
+      <h3>IA preditiva: Reino Unido testa tecnologia para antecipar assassinatos</h3>
+      <p>O Reino Unido está desenvolvendo um sistema baseado em inteligência artificial para prever assassinatos antes que aconteçam, em uma iniciativa comparada ao filme <em>Minority Report</em>. O projeto analisa dados de até 500 mil pessoas para identificar potenciais autores de crimes graves, incluindo informações sensíveis como saúde mental e histórico de violência doméstica.</p>
+    
+      <p><strong>Preocupações éticas e riscos sistêmicos</strong></p>
+      <p>Críticos apontam riscos de discriminação, uso indevido de dados e falhas preditivas. Especialistas brasileiros destacam que, apesar da IA poder ajudar na prevenção de reincidência criminal e análise de padrões, prever crimes futuros é eticamente controverso e tecnicamente limitado.</p>
+    
+      <p><strong>IA como apoio, não substituição de decisões</strong></p>
+      <p>Para estudiosos, a aplicação responsável da IA na segurança pública deve se restringir à análise de dados já existentes e apoio estratégico — e não à antecipação de comportamentos humanos com base em algoritmos que podem reproduzir preconceitos estruturais. A tecnologia deve apoiar decisões, não substituí-las.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2024/11/inteligencia-artificial-1920x1080.jpg" alt="Imagem representativa do uso de IA no ambiente de trabalho">
+      </div>
+      <h3>Estudo global revela uso indevido de IA no ambiente de trabalho</h3>
+      <p>Uma pesquisa da Melbourne Business School com 32 mil trabalhadores em 47 países mostrou que a inteligência artificial já é parte do cotidiano profissional de muitos: 58% usam a tecnologia regularmente, sendo que um terço a utiliza semanal ou diariamente. Apesar de apontarem ganhos em eficiência e qualidade, quase metade dos entrevistados admitiu usar a IA de forma inadequada, muitas vezes sem políticas claras das empresas.</p>
+    
+      <p><strong>Riscos com dados sensíveis e uso fora das normas</strong></p>
+      <p>Entre os problemas mais comuns está o envio de dados confidenciais — 48% disseram já ter carregado informações sensíveis de suas empresas ou clientes em plataformas públicas de IA generativa. Outros 44% confessaram uso que contraria normas internas, o que pode gerar riscos legais, financeiros e de reputação.</p>
+    
+      <p><strong>Necessidade de governança e conscientização</strong></p>
+      <p>O estudo reforça a necessidade de diretrizes específicas e conscientização sobre o uso responsável da IA no trabalho. A confiança excessiva nas respostas geradas por essas ferramentas, mesmo quando incorretas — situação vivida por mais da metade dos usuários —, é outro alerta importante.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/TV-AI-1920x1000.jpg" alt="Imagem representativa da influência da IA nas indústrias criativas">
+      </div>
+      <h3>IA é vista como ameaça, mas pode impulsionar nova revolução criativa, aponta análise</h3>
+      <p>Assim como a televisão não eliminou o cinema, a inteligência artificial também não deve acabar com as indústrias criativas — e sim transformá-las. A comparação foi feita em análise publicada no <em>Olhar Digital</em>, destacando que, historicamente, a inovação técnica e estética levou o cinema a se reinventar frente à concorrência com a TV, surgindo o widescreen, o 3D e novas linguagens narrativas.</p>
+    
+      <p><strong>Tecnologia como aliada expressiva</strong></p>
+      <p>Agora, diante da IA, artistas enfrentam temores semelhantes. Porém, a tecnologia também oferece oportunidades: democratiza ferramentas criativas e amplia as possibilidades expressivas. O uso responsável e integrado da IA pode marcar uma nova era, na qual humanos e máquinas compartilham o processo criativo — mantendo a emoção e a originalidade como elementos centrais.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/Hbitos-que-danificam-o-PC-1920x1080.png" alt="Imagem representativa dos cuidados com notebooks">
+      </div>
+      <h3>8 hábitos comuns que podem danificar seu notebook e como evitá-los</h3>
+      <p>Embora notebooks sejam projetados para durar vários anos, alguns hábitos cotidianos podem reduzir sua vida útil. O <em>Olhar Digital</em> listou práticas que devem ser evitadas para preservar o desempenho do equipamento.</p>
+    
+      <p><strong>Riscos físicos e térmicos</strong></p>
+      <p>Comer próximo ao aparelho pode fazer migalhas entrarem no teclado, enquanto bloquear as saídas de ar — ao usá-lo no colo ou na cama — pode causar superaquecimento. Coolers e ventoinhas são acessórios recomendados para auxiliar no resfriamento. Segurar o notebook pela tela também é arriscado, pois compromete o display.</p>
+    
+      <p><strong>Desgaste interno e manutenção inadequada</strong></p>
+      <p>Outros erros frequentes incluem manter o notebook sempre na potência máxima, o que desgasta componentes internos, e realizar limpezas inadequadas, especialmente com produtos abrasivos, que podem danificar a tela. Ignorar atualizações de sistema operacional, aplicativos e drivers é outro fator de risco, já que essas atualizações corrigem falhas e reforçam a segurança do sistema.</p>
+    
+      <p><strong>Ameaças digitais e cuidados com a bateria</strong></p>
+      <p>Baixar arquivos de fontes não confiáveis representa ameaça adicional, podendo instalar malware e comprometer dados pessoais. Além disso, deixar o aparelho descarregar completamente com frequência acelera o desgaste da bateria de íon-lítio. O ideal é manter a carga entre 20% e 80%.</p>
+    
+      <p><strong>Rotina preventiva de uso</strong></p>
+      <p>Para preservar seu dispositivo, a recomendação é adotar uma rotina de cuidados simples, mas eficazes — usando conectividade segura, evitando descuidos físicos e mantendo o equipamento protegido com software de segurança sempre atualizado.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.olhardigital.com.br/wp-content/uploads/2025/04/shutterstock_2577003037-1.jpg" alt="Imagem comparativa entre os modelos ChatGPT e DeepSeek">
+      </div>
+      <h3>ChatGPT vs. DeepSeek: Teste Revela Qual IA Raciocina Melhor</h3>
+      <p>Em uma nova rodada de testes comparativos, os modelos de inteligência artificial OpenAI o1 e DeepSeek R1 foram avaliados quanto à capacidade de raciocínio lógico e precisão na citação de fontes. O estudo utilizou o "Reasons Benchmark", que mede como cada modelo interpreta frases isoladas e constrói argumentos a partir delas.</p>
+    
+      <p><strong>Desempenho lógico e taxa de alucinação</strong></p>
+      <p>O desempenho revelou uma vantagem clara para o OpenAI o1, que acertou 65% das vezes e demonstrou consistência ao justificar suas respostas. Já o DeepSeek R1 obteve apenas 35% de acerto e apresentou uma taxa de alucinação de 85%, ou seja, inventou informações com frequência.</p>
+    
+      <p><strong>Conexões conceituais e limitações técnicas</strong></p>
+      <p>Quando desafiados a conectar conceitos complexos como inteligência artificial, bancos de dados e cognição humana, o o1 conseguiu identificar e explicar corretamente essas relações, enquanto o DeepSeek ainda mostrou limitações nesse tipo de tarefa.</p>
+    
+      <p><strong>Importância da interpretação precisa</strong></p>
+      <p>Os pesquisadores destacam que a precisão das IAs depende diretamente da capacidade de interpretar informações específicas sem recorrer a generalizações. Modelos que apenas resumem textos longos tendem a perder detalhes cruciais, o que compromete a utilidade da resposta.</p>
+    
+      <p><strong>Liderança da OpenAI e novas ferramentas</strong></p>
+      <p>Embora o DeepSeek R1 tenha alcançado resultados similares ao OpenAI o1 em áreas como matemática e programação, a análise reforça que a OpenAI ainda lidera em tarefas que exigem interpretação profunda e justificativas consistentes. A OpenAI também anunciou uma nova ferramenta de pesquisa que promete melhorar a geração de relatórios com explicações embasadas e fontes verificáveis — um avanço que pode influenciar o uso acadêmico e profissional das IAs.</p>
+    </article>
+    
+    <article class="news-article">
+      <div class="article-image">
+        <img src="https://img.odcdn.com.br/wp-content/uploads/2025/04/iStock-1331063982-1920x1080.jpg" alt="Imagem representativa de relacionamentos entre humanos e IAs">
+      </div>
+      <h3>Relacionamentos com IAs: 80% da Geração Z Considera se Casar com uma Inteligência Artificial</h3>
+      <p>Um estudo recente da empresa de chatbots Joi AI revelou uma mudança significativa no comportamento emocional da Geração Z: 80% dos jovens entrevistados afirmaram que se casariam com uma inteligência artificial. A pesquisa, realizada com 2 mil participantes, também indicou que 83% acreditam ser possível desenvolver vínculos emocionais profundos com esses sistemas, enquanto 75% consideram que a IA pode substituir completamente a companhia humana.</p>
+    
+      <p><strong>IA como suporte emocional contínuo</strong></p>
+      <p>A crescente aproximação com a tecnologia é vista como uma forma de suporte emocional, especialmente para jovens que enfrentam estresse ou solidão. Segundo especialistas da Joi AI, as IAs têm se tornado “melhores amigos digitais”, oferecendo conforto e disponibilidade ininterrupta.</p>
+    
+      <p><strong>Alerta sociológico sobre vínculos simulados</strong></p>
+      <p>Contudo, especialistas em sociologia alertam para os efeitos colaterais dessa tendência. A facilidade de se relacionar com IAs, que não oferecem os desafios dos relacionamentos humanos, pode estar contribuindo para o enfraquecimento das conexões sociais reais. Para a socióloga digital Julie Albright, a substituição das relações humanas por vínculos simulados representa uma transformação profunda e preocupante nos hábitos afetivos das novas gerações.</p>
+    
+      <p><strong>Um futuro à la “Her”</strong></p>
+      <p>O fenômeno, que lembra o enredo do filme <em>Her</em>, sinaliza um futuro onde os limites entre relações humanas e digitais tornam-se cada vez mais tênues.</p>
+    </article>
+    
+
+  </section>
+  
+  <!-- Modal para exibir o conteúdo da seção selecionada -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modal-close" class="modal-close">&times;</span>
+      <div id="modal-body">
+        <!-- Conteúdo dinâmico do modal será inserido aqui -->
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      /* -------------------- Elementos principais -------------------- */
+      const menuLinks = document.querySelectorAll('.menu ul li a');
+      const modal      = document.getElementById('modal');
+      const modalBody  = document.getElementById('modal-body');
+      const modalClose = document.getElementById('modal-close');
+    
+      /* -------------------- Utilidades do modal -------------------- */
+      function clearModal() {
+        modalBody.innerHTML = "";
+      }
+      function closeModal() {
+        modal.style.display = "none";
+        clearModal();
+      }
+      modalClose.addEventListener('click', closeModal);
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) closeModal();
+      });
+    
+      /* -------------------- Navegação por seções -------------------- */
+      menuLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          clearModal();
+          const targetSectionSelector = this.getAttribute('data-section');
+          const targetSection = document.querySelector(targetSectionSelector);
+          if (targetSection) {
+            const accordionContainer = document.createElement('div');
+            const articles = targetSection.querySelectorAll('article.news-article');
+    
+            articles.forEach(function(article, index) {
+              /* Cabeçalho sanfona */
+              const header = document.createElement('div');
+              header.className = "accordion-header";
+              const titleElement = article.querySelector('h3');
+              header.textContent = titleElement ? titleElement.textContent.trim()
+                                                : "Artigo " + (index + 1);
+    
+              /* Conteúdo sanfona */
+              const content = document.createElement('div');
+              content.className = "accordion-content";
+              content.innerHTML = article.innerHTML;
+              content.style.display = "none";
+    
+              /* Toggle */
+              header.addEventListener('click', function() {
+                const allContents = accordionContainer.querySelectorAll('.accordion-content');
+                allContents.forEach(function(c) {
+                  if (c !== content) c.style.display = "none";
+                });
+                content.style.display = (content.style.display === "block") ? "none" : "block";
+              });
+    
+              accordionContainer.appendChild(header);
+              accordionContainer.appendChild(content);
+            });
+    
+            modalBody.appendChild(accordionContainer);
+            modal.style.display = "block";
+          }
+        });
+      });
+    
+      /* -------------------- NOVO: pausa entre matérias para o @Voice -------------------- */
+      /*  Inserimos um token invisível que o app lê como pausa de 1,5 s (1500 ms).        */
+      document.querySelectorAll('article.news-article')
+              .forEach((art, idx, list) => {
+        if (idx < list.length - 1) {                 // evita pausa após o último artigo
+          const marker = document.createElement('p');
+          marker.className = 'tts-pause';
+          marker.textContent = '[[@~1500000}}';         // ajuste o valor conforme necessário
+          art.parentNode.insertBefore(marker, art.nextSibling);
+        }
+      });
+    });
+    </script>    
+</body>
+</html>
